@@ -1,7 +1,7 @@
 module.exports = {
-  HOST: "localhost",
+  HOST: "127.0.0.1",
   USER: "root",
   PASSWORD: "12345678",
-  DB: "pmdbtest",
+  DB: "moviesdb",
   PORT: 3307,
 };

@@ -22,115 +22,85 @@ verifyToken = (req, res, next) => {
   });
 };
 
-isModerator = (req, res, next) => {
-  User.findById(req.userId, (err, user) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found User with id ${req.userId}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Error retrieving User with id " + req.userId
-        });
-      }
-    } else {
-      if (user.roleId === 1) {
-        next();
-        return;
-      }
-
-      res.status(403).send({
-        message: "Require Moderator Role!"
-      });
+isModerator = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (user.role_id === 1) {
+      next();
       return;
-    };
-  });
+    }
+
+    res.status(403).send({
+      message: "Require Moderator Role!"
+    });
+    return;
+  } catch (err) {
+    if (err.kind === "not_found") {
+      res.status(404).send({
+        message: `Not found User with id ${req.userId}.`
+      });
+    } else {
+      res.status(500).send({
+        message: "Error retrieving User with id " + req.userId
+      });
+    }
+  }
 };
 
-isProductionFacility = (req, res, next) => {
-  User.findById(req.userId, (err, user) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found User with id ${req.userId}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Error retrieving User with id " + req.userId
-        });
-      }
-    } else {
-      if (user.roleId === 2) {
-        next();
-        return;
-      }
-
-      res.status(403).send({
-        message: "Require Production Facility Role!"
-      });
+isStaff = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (user.role_id === 2) {
+      next();
       return;
-    };
-  });
+    }
+
+    res.status(403).send({
+      message: "Require Staff Role!"
+    });
+    return;
+  } catch (err) {
+    if (err.kind === "not_found") {
+      res.status(404).send({
+        message: `Not found User with id ${req.userId}.`
+      });
+    } else {
+      res.status(500).send({
+        message: "Error retrieving User with id " + req.userId
+      });
+    }
+  }
 };
 
-isDistributionAgent = (req, res, next) => {
-  User.findById(req.userId, (err, user) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found User with id ${req.userId}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Error retrieving User with id " + req.userId
-        });
-      }
-    } else {
-      if (user.roleId === 3) {
-        next();
-        return;
-      }
-
-      res.status(403).send({
-        message: "Require Distribution Agent Role!"
-      });
+isCustomer = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (user.role_id === 3) {
+      next();
       return;
-    };
-  });
-};
+    }
 
-isWarrantyCenter = (req, res, next) => {
-  User.findById(req.userId, (err, user) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found User with id ${req.userId}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Error retrieving User with id " + req.userId
-        });
-      }
-    } else {
-      if (user.roleId === 4) {
-        next();
-        return;
-      }
-
-      res.status(403).send({
-        message: "Require Warranty Center Role!"
+    res.status(403).send({
+      message: "Require Customer Role!"
+    });
+    return;
+  } catch (err) {
+    if (err.kind === "not_found") {
+      res.status(404).send({
+        message: `Not found User with id ${req.userId}.`
       });
-      return;
-    };
-  });
+    } else {
+      res.status(500).send({
+        message: "Error retrieving User with id " + req.userId
+      });
+    }
+  }
 };
 
 const authJwt = {
   verifyToken: verifyToken,
   isModerator: isModerator,
-  isProductionFacility: isProductionFacility,
-  isDistributionAgent: isDistributionAgent,
-  isWarrantyCenter: isWarrantyCenter,
+  isStaff: isStaff,
+  isCustomer: isCustomer,
 };
 module.exports = authJwt;
