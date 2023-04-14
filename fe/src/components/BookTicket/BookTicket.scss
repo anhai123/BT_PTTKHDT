@@ -1,0 +1,267 @@
+@import "../connect";
+
+.bookMovie {
+  z-index: 18;
+  display: block;
+  position: absolute;
+  top: 400px;
+  background-color: $color-white-0;
+  max-width: 940px;
+  margin: auto;
+  width: 100%;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  padding: spacing(2);
+  border-radius: 5px;
+  box-shadow: 0 0 10px $color-black-dark-3;
+  @include responsive_mobile {
+    padding: spacing(1);
+    transform: translate(-50%, 90%);
+    width: 90%;
+  }
+  @include responsive_tablet {
+    padding: spacing(1);
+    transform: translate(-50%, 90%);
+    width: 90%;
+  }
+  @include responsive_laptop--mini {
+    padding: spacing(1);
+    transform: translate(-50%, 50%);
+    width: 90%;
+  }
+  @include responsive_laptop--medium {
+    padding: spacing(1);
+    transform: translate(-50%, 50%);
+    width: 90%;
+  }
+  .row {
+    .select__item {
+      @include responsive_mobile {
+        width: 50%;
+        margin-bottom: spacing(0.5);
+      }
+      @include responsive_tablet {
+        width: 50%;
+        margin-bottom: spacing(0.5);
+      }
+      &.button__form {
+        // width: 100%;
+        text-align: center;
+      }
+      .select__form {
+        position: relative;
+        // display: flex;
+        width: 100%;
+        height: 3em;
+        line-height: 3;
+        background: none;
+        overflow: hidden;
+        border-radius: 0.25em;
+        border-right: 1px solid $color-gray-1;
+        transition: 0.2s ease-in-out;
+        @include responsive_mobile {
+          @include Text($fs-1, $fw-regular);
+        }
+        @include responsive_tablet {
+          @include Text($fs-1 + 1, $fw-regular);
+        }
+        @include responsive_laptop--mini {
+          @include Text($fs-1 + 1, $fw-regular);
+        }
+        @include responsive_laptop--medium {
+          @include Text($fs-1 + 2, $fw-regular);
+        }
+        &:hover::after {
+          color: $color-blue;
+        }
+        &:hover {
+          opacity: 0.5;
+        }
+        &::after {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 100px;
+          height: 100%;
+          content: "";
+          background: linear-gradient(to right, transparent, white);
+          pointer-events: none;
+        }
+        select {
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          -ms-appearance: none;
+          appearance: none;
+          outline: 0;
+          box-shadow: none;
+          border: 0 !important;
+          background: none;
+          background-image: none;
+          flex: 1;
+          // padding: 0 0.5em;
+          color: #333;
+          cursor: pointer;
+          &::-ms-expand {
+            display: none;
+          }
+          &::-webkit-scrollbar {
+            width: 4px;
+            background-color: $color-gray-6;
+          }
+          &::-webkit-scrollbar-thumb {
+            background-color: $color-gray-2;
+            border-radius: 5px;
+          }
+          option {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+      }
+      @mixin btn-border-drawing(
+        $color: #ccc,
+        $hover: black,
+        $width: 2px,
+        $vertical: top,
+        $horizontal: left,
+        $duration: 0.25s
+      ) {
+        box-shadow: inset 0 0 0 $width $color;
+        color: $color;
+        transition: color $duration $duration/3;
+        position: relative;
+
+        &::before,
+        &::after {
+          border: 0 solid transparent;
+          box-sizing: border-box;
+          content: "";
+          pointer-events: none;
+          position: absolute;
+          width: 0;
+          height: 0;
+
+          #{$vertical}: 0;
+          #{$horizontal}: 0;
+        }
+
+        &::before {
+          $h-side: if($horizontal == "left", "right", "left");
+
+          border-#{$vertical}-width: $width;
+          border-#{$h-side}-width: $width;
+        }
+
+        &::after {
+          $v-side: if($vertical == "top", "bottom", "top");
+
+          border-#{$v-side}-width: $width;
+          border-#{$horizontal}-width: $width;
+        }
+
+        &:hover {
+          color: $hover;
+
+          &::before,
+          &::after {
+            border-color: $hover;
+            transition: border-color 0s, width $duration, height $duration;
+            width: 100%;
+            height: 100%;
+          }
+
+          &::before {
+            transition-delay: 0s, 0s, $duration;
+          }
+
+          &::after {
+            transition-delay: 0s, $duration, 0s;
+          }
+        }
+      }
+
+      .draw-border {
+        @include btn-border-drawing(
+          $color-gray-2,
+          $color-blue,
+          2px,
+          bottom,
+          right
+        );
+      }
+
+      //=== Button styling, semi-ignore
+      .btn-style {
+        background: none;
+        border: none;
+        cursor: pointer;
+        line-height: 1.5;
+        font: 700 1.2rem "Roboto Slab", sans-serif;
+        letter-spacing: 0.05rem;
+        width: 100%;
+        height: 100%;
+        color: #333;
+        @include responsive_mobile {
+          padding: spacing(1);
+          width: 50%;
+          @include Text($fs-1, $fw-bold);
+        }
+        @include responsive_tablet {
+          padding: spacing(1);
+          width: 50%;
+          @include Text($fs-1, $fw-bold);
+        }
+        @include responsive_laptop--mini {
+          padding: spacing(1);
+          width: 100%;
+          @include Text($fs-1, $fw-bold);
+        }
+        @include responsive_laptop--medium {
+          padding: spacing(1);
+          width: 100%;
+          @include Text($fs-1, $fw-bold);
+        }
+        &:focus {
+          outline: none;
+        }
+      }
+      .btn-style-disable {
+        background: none;
+        border: none;
+        cursor: no-drop;
+        line-height: 1.5;
+        font: 700 1.2rem "Roboto Slab", sans-serif;
+        letter-spacing: 0.05rem;
+        width: 100%;
+        height: 100%;
+        color: $color-white-0;
+        opacity: 0.3;
+        background-color: rgba(50, 50, 50, 0.9);
+        @include responsive_mobile {
+          padding: spacing(1);
+          width: 50%;
+          @include Text($fs-1, $fw-bold);
+        }
+        @include responsive_tablet {
+          padding: spacing(1);
+          width: 50%;
+          @include Text($fs-1, $fw-bold);
+        }
+        @include responsive_laptop--mini {
+          padding: spacing(1);
+          width: 100%;
+          @include Text($fs-1, $fw-bold);
+        }
+        @include responsive_laptop--medium {
+          padding: spacing(1);
+          width: 100%;
+          @include Text($fs-1, $fw-bold);
+        }
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
+}
