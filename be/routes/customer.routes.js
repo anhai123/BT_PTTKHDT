@@ -57,4 +57,10 @@ module.exports = function (app) {
     [authJwt.verifyToken, authJwt.isCustomer],
     controller.CustomerPayment
   );
+
+  app.put(
+    "/api/customer/seat/cancel",
+    [authJwt.verifyToken, authJwt.isCustomer],
+    controller.CustomerSeatCancel
+  );
 };

@@ -12,7 +12,7 @@ exports.signup = async (req, res) => {
     let valid = 0;
     if (req.body.role_id === 1) {
       try {
-        await User.getAllByAccepted(1);
+        await User.getAllByValid(1);
       } catch (err) {
         if (err.kind === "not_found") {
           valid = 1;

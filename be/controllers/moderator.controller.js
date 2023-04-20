@@ -194,7 +194,8 @@ exports.ModeratorCreateScreening = async (req, res) => {
     let screening = new Screening(req.body);
     const movie = await Movies.findById(req.body.movie_id);
     let start_time = new Date(screening.start_time);
-    screening.end_time = start_time.setMinutes(start_time.getMinutes + movie.duration);
+    screening.end_time = start_time;
+    screening.end_time.setMinutes(start_time.getMinutes() + movie.duration);
     await Screening.create(screening);
     res.send({ message: "Thêm lịch chiếu thành công!" });
   } catch (err) {

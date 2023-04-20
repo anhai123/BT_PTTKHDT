@@ -31,7 +31,7 @@ User.create = newUser => {
 
 User.getAllByValid = valid => {
   return new Promise((resolve, reject) => {
-    sql.query(`SELECT * FROM user WHERE valid=${valid}`, (err, res) => {
+    sql.query(`SELECT * FROM user WHERE valid=${valid} and role_id = 1`, (err, res) => {
       if (err) {
         console.log("error: ", err);
         return reject(err);
@@ -130,7 +130,7 @@ User.remove = id => {
 
 User.findByNameAndRoleId = (full_name, role_id) => {
   return new Promise((resolve, reject) => {
-    sql.query(`SELECT * FROM user WHERE role_id = ${role_id} and full_name LIKE '%${full_name}%'`, (err, res) => {
+    sql.query(`SELECT * FROM user WHERE role_id = ${role_id} and full_name LIKE '%${full_name}%' and valid = 1`, (err, res) => {
       if (err) {
         console.log("error: ", err);
         return reject(err);

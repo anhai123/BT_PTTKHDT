@@ -27,6 +27,11 @@ exports.CustomerBookings = async (req, res) => {
 exports.CustomerDeleteBookings = async (req, res) => {
   for (let id of req.body.ids) {
     try {
+      const booking = await Booking.findById(id);
+      await Seat.updateById({
+        seat_id: booking.seat_id,
+        status: `Chưa đặt`,
+      });
       await Booking.remove(id);
     } catch (err) {
       if (err.kind === "not_found") {
@@ -215,12 +220,33 @@ exports.CustomerPayment = async (req, res) => {
       booking.seat_id = req.body.seat_ids[i];
       booking.price = req.body.prices[i];
       const newBooking = await Booking.create(booking);
+      await Seat.updateById({
+        seat_id: booking.seat_id,
+        status: `Đã đặt`,
+      });
     }
     res.send({ message: "Thanh toán thành công!" });
   } catch (err) {
     res.status(500).send({
       message:
         `Lỗi khi thanh toán!`
+    });
+  }
+};
+
+exports.CustomerSeatCancel = async (req, res) => {
+  try {
+    for (let i = 0; i < req.body.seat_ids.length; i++) {
+      await Seat.updateById({
+        seat_id: req.body.seat_ids[i],
+        status: `Chưa đặt`,
+      });
+    }
+    res.send({ message: "Cập nhật thành công!" });
+  } catch (err) {
+    res.status(500).send({
+      message:
+        `Lỗi khi cập nhật!`
     });
   }
 };
