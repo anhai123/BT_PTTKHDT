@@ -1,53 +1,56 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState, useEffect, useContext } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-
+import { GlobalState } from "../GlobalState";
 import { login } from "../slices/auth";
 import { clearMessage } from "../slices/message";
-
+import authService from "../services/auth.service";
+import { Button, Checkbox, Input, Row, Col, Card, Space, message } from "antd";
 const Login = () => {
   let navigate = useNavigate();
-
   const [loading, setLoading] = useState(false);
-
-  const { isLoggedIn } = useSelector((state) => state.auth);
-  const { message } = useSelector((state) => state.message);
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(clearMessage());
-  }, [dispatch]);
-
   const initialValues = {
     username: "",
     password: "",
   };
-
+  const state = useContext(GlobalState);
+  const [isLogged] = state.userAPI.isLogged;
   const validationSchema = Yup.object().shape({
     username: Yup.string().required("This field is required!"),
     password: Yup.string().required("This field is required!"),
   });
 
-  const handleLogin = (formValue) => {
-    const { username, password } = formValue;
-    setLoading(true);
+  const onFinish = (values) => {
+    const setUserInfo = state.userAPI.userInfo[1];
+    const setIslog = state.userAPI.isLogged[1];
 
-    dispatch(login({ username, password }))
-      .unwrap()
-      .then(() => {
-        navigate("/profile");
-        window.location.reload();
-      })
-      .catch(() => {
-        setLoading(false);
-      });
+    console.log("Received values of form: ", values);
+    authService.login(values.username, values.password).then(
+      (response) => {
+        setUserInfo(response);
+        setIslog(true);
+        // state.userAPI.isLogged.setIsLogged(true);
+
+        message.success("login successfully");
+        // window.location.href = "/";
+      },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+        message.error(_content);
+      }
+    );
   };
-
-  if (isLoggedIn) {
-    return <Navigate to="/profile" />;
+  console.log(isLogged);
+  if (isLogged) {
+    return <Navigate to="/user-infor" />;
   }
 
   return (
@@ -61,7 +64,7 @@ const Login = () => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={handleLogin}
+          onSubmit={onFinish}
         >
           <Form>
             <div className="form-group">
@@ -99,14 +102,6 @@ const Login = () => {
           </Form>
         </Formik>
       </div>
-
-      {message && (
-        <div className="form-group">
-          <div className="alert alert-danger" role="alert">
-            {message}
-          </div>
-        </div>
-      )}
     </div>
   );
 };

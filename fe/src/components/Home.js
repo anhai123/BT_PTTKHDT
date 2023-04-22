@@ -22,6 +22,7 @@ import TatCaMovie from "./AllMovie";
 import MoviesSection from "./ModalTrailer/MoviesSection";
 // import ChooseSlot from "./BookingSlot/ChooseSlot/ChooseSlot";
 import BookingTicket from "./BookingTicket";
+import HeaderCom from "./header";
 const Home = () => {
   const [content, setContent] = useState("");
 
@@ -79,7 +80,9 @@ const Home = () => {
       {/* <UserInformation /> */}
       {/* <TatCaMovie />
       <MoviesSection /> */}
-      <BookingTicket />
+      {/* <BookingTicket /> */}
+      {/* <MoviesSection /> */}
+      {/* <HeaderCom /> */}
     </>
   );
 };

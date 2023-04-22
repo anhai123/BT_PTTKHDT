@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-
+import { GlobalState } from "../GlobalState";
 const Profile = () => {
-  const { user: currentUser } = useSelector((state) => state.auth);
-
+  const state = useContext(GlobalState);
+  const currentUser = state.userAPI.userInfo[0];
+  console.log(currentUser);
   if (!currentUser) {
     return <Navigate to="/login" />;
   }

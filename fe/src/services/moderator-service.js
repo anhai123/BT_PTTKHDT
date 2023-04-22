@@ -1,7 +1,7 @@
 import axios from "axios";
 import authHeader from "./auth-header";
 
-const API_URL = "http://localhost:8081/api/moderator/";
+const API_URL = "http://localhost:8080/api/moderator/";
 const getNeedAcceptAccount = () => {
   return axios
     .get(API_URL + "account", { headers: authHeader() })
@@ -13,7 +13,7 @@ const getNeedAcceptAccount = () => {
 const acceptAccount = (ids) => {
   return axios
     .put(
-      API_URL + "account" + `${id}`,
+      API_URL + "account",
       { ids },
       {
         headers: authHeader(),
@@ -27,7 +27,7 @@ const acceptAccount = (ids) => {
 const notAcceptAccount = (ids) => {
   return axios
     .put(
-      API_URL + "account" + `${id}`,
+      API_URL + "account",
       { ids },
       {
         headers: authHeader(),
@@ -97,7 +97,7 @@ const updateFilmInfor = (
 ) => {
   return axios
     .put(
-      API_URL + "film" + `${id}`,
+      API_URL + "film",
       {
         movie_id,
         title,
@@ -124,3 +124,15 @@ const deleteFilm = (deleteId) => {
     },
   });
 };
+const moderaterService = {
+  getNeedAcceptAccount,
+  acceptAccount,
+  notAcceptAccount,
+  rejectWaitingAccount,
+  searchEmployeeAccount,
+  addNewMovie,
+  findFilmForUpdate,
+  updateFilmInfor,
+  deleteFilm,
+};
+export default moderaterService;

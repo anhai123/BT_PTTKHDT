@@ -17,20 +17,20 @@ import {
   Row,
   Col,
 } from "antd";
-import React, { useCallback, useEffect, useState } from "react";
 import { UploadOutlined, PaperClipOutlined } from "@ant-design/icons";
-
+import { GlobalState } from "../../GlobalState";
 import { UserOutlined } from "@ant-design/icons";
 import "./DescriptionContainer.css";
-
+import React, { useState, useEffect, useContext } from "react";
 const { Header, Footer, Sider, Content } = Layout;
 const key = "updatable";
-const DescriptionContainer = () => {
-  let { state } = useLocation();
-  let navigate = useNavigate();
 
+const DescriptionContainer = () => {
+  let navigate = useNavigate();
+  const state = useContext(GlobalState);
+  const userInfo = state.userAPI.userInfo[0];
+  console.log(userInfo);
   const [form] = Form.useForm();
-  const dispatcher = useDispatch();
 
   const [editingKey, setEditingKey] = useState("");
   const [stateUpload, setState] = useState({
@@ -76,88 +76,9 @@ const DescriptionContainer = () => {
     },
   };
 
-  const onFinish = (values) => {
-    console.log("Success:", values);
-  };
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
-
-  const handelClickEditButton = (values) => {
-    // console.log(values);
-    form.setFieldsValue({
-      heroname: "",
-      description: "",
-      attackP: "",
-      defendP: "",
-      crit_damage: "",
-      avatar: "",
-      //   [values]: data[values],
-    });
-    setEditingKey(values);
-  };
-  const handelClickDeleteHeroButton = (key, data) => {
-    // console.log(data);
-    // dispatcher(deleteHeroAPI(data._id));
-  };
-  const save = async (key) => {
-    // try {
-    //   const row = await form.validateFields();
-    //   // console.log(row);
-    //   let newData;
-    //   if (key === "avatar") {
-    //     let hero = await resizeFile(row.avatar.file.originFileObj).then(
-    //       (uri) => {
-    //         let hero1 = { ...data, avatar: uri };
-    //         return hero1;
-    //       }
-    //     );
-    //     newData = hero;
-    //   } else {
-    //     newData = { ...data };
-    //     newData[key] = row[key];
-    //     // console.log(newData);
-    //   }
-    //   // console.log(newData);
-    //   dispatcher(updateHeroList(newData));
-    //   dispatcher(updateHero(newData));
-    //   setTimeout(() => {
-    //     message.success({
-    //       content: "Cập nhật thông tin nhân vật thành công",
-    //       key,
-    //       duration: 2,
-    //     });
-    //   }, 1000);
-    //   setEditingKey("");
-    // } catch (errInfo) {
-    //   console.log("Validate Failed:", errInfo);
-    // }
-  };
-
   const cancel = () => {
     setEditingKey("");
   };
-
-  //   useEffect(() => {
-  //     setData(heroList.find((hero) => hero.key === state.key));
-  //   }, [form.getFieldsValue()]);
-
-  //Đảm bảo quay lại trang hero list mà dữ liệu trong list đã được cập nhật
-  //   useEffect(() => {
-  //     if (data === undefined) {
-  //       setTimeout(() => {
-  //         message.success({
-  //           content: "Xóa nhân vật thành công",
-  //           key,
-  //           duration: 2,
-  //         });
-  //       }, 1000);
-  //       setHeroDeleteYet(true);
-  //     }
-  //     return () => redirect("/hero-list");
-  //   }, [data]);
-
-  //   const origindata = data !== undefined ? Object.entries(data) : [];
   if (HeroDeleteYet) {
     setTimeout(() => {
       message.success({
@@ -197,51 +118,30 @@ const DescriptionContainer = () => {
 
   return (
     <>
-      <Row>
-        <Col
-          span={18}
-          style={{ display: "flex", justifyContent: "flex-start" }}
-        >
-          Tài khoản:
-        </Col>
-        <Col flex={3} style={{ display: "flex", justifyContent: "flex-start" }}>
-          3 / 5
-        </Col>
-      </Row>
       <Row className="margin-top">
         <Col
-          span={18}
+          span={12}
           style={{ display: "flex", justifyContent: "flex-start" }}
         >
-          Họ tên:
+          Tên đăng nhập
         </Col>
         <Col flex={3} style={{ display: "flex", justifyContent: "flex-start" }}>
-          3 / 5
+          {userInfo.user_name}
         </Col>
       </Row>
+
       <Row className="margin-top">
         <Col
-          span={18}
-          style={{ display: "flex", justifyContent: "flex-start" }}
-        >
-          Nhóm:
-        </Col>
-        <Col flex={3} style={{ display: "flex", justifyContent: "flex-start" }}>
-          3 / 5
-        </Col>
-      </Row>
-      <Row className="margin-top">
-        <Col
-          span={18}
+          span={12}
           style={{ display: "flex", justifyContent: "flex-start" }}
         >
           Email:
         </Col>
         <Col flex={3} style={{ display: "flex", justifyContent: "flex-start" }}>
-          3 / 5
+          {userInfo.email}
         </Col>
       </Row>
-      <Row className="margin-top">
+      {/* <Row className="margin-top">
         <Col
           span={18}
           style={{ display: "flex", justifyContent: "flex-start" }}
@@ -251,16 +151,16 @@ const DescriptionContainer = () => {
         <Col flex={3} style={{ display: "flex", justifyContent: "flex-start" }}>
           3 / 5
         </Col>
-      </Row>
+      </Row> */}
       <Row className="margin-top">
         <Col
-          span={18}
+          span={12}
           style={{ display: "flex", justifyContent: "flex-start" }}
         >
           <UserOutlined style={{ fontSize: "20px" }} />
         </Col>
         <Col flex={3} style={{ display: "flex", justifyContent: "flex-start" }}>
-          3 / 5
+          {userInfo.role}
         </Col>
       </Row>
     </>

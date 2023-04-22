@@ -1,8 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { Button, Table, message, Input, Space } from "antd";
-import { useEffect } from "react";
+import { GlobalState } from "../../../GlobalState";
 import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
+import moderaterService from "../../../services/moderator-service";
+
 const data = [
   {
     key: "1",
@@ -17,90 +19,69 @@ const AccountChecking = () => {
   const [loading, setLoading] = useState(false);
   // const [data, setData] = useState([]);
   const hasSelected = selectedRowKeys.length > 0;
-  const getDataFunction = () => {
-    // ModeratorService.getWaitingAccountList().then(
-    //   (response) => {
-    //     const _data = [];
-    //     console.log(response.data);
-    //     for (let i = 0; i < response.data.length; i++) {
-    //       _data.push({
-    //         key: response.data[i].id,
-    //         username: response.data[i].tai_khoan,
-    //         email: response.data[i].email,
-    //         address: response.data[i].cua,
-    //       });
-    //     }
-    //     setData(_data);
-    //   },
-    //   (error) => {
-    //     const _content =
-    //       (error.response &&
-    //         error.response.data &&
-    //         error.response.data.message) ||
-    //       error.message ||
-    //       error.toString();
-    //     console.log(_content);
-    //   }
-    // );
-  };
+  const state = useContext(GlobalState);
+  const notAcceptAccount = state.userAPI.notAcceptAccount[0];
+  const setCallBack = state.userAPI.callback[1];
+  console.log(notAcceptAccount);
+
   //   useEffect(() => {
   //     getDataFunction();
   //   }, [loading]);
   const start = () => {
     setLoading(true);
-    // ModeratorService.acceptWaitingAccount(selectedRowKeys).then(
-    //   (response) => {
-    //     console.log(response);
-    //     setTimeout(() => {
-    //       message.success({
-    //         content: `Chấp nhận tài khoản`,
-    //         key: "message",
-    //         duration: 2,
-    //       });
-    //     }, 1000);
-    //     getDataFunction();
-    //   },
-    //   (error) => {
-    //     const _content =
-    //       (error.response &&
-    //         error.response.data &&
-    //         error.response.data.message) ||
-    //       error.message ||
-    //       error.toString();
+    moderaterService.acceptAccount(selectedRowKeys).then(
+      (response) => {
+        console.log(response);
+        setTimeout(() => {
+          message.success({
+            content: `Chấp nhận tài khoản`,
+            key: "message",
+            duration: 2,
+          });
+        }, 1000);
+        setCallBack(state.userAPI.callback[0]);
+      },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
 
-    //     console.log(_content);
-    //   }
-    // );
+        console.log(_content);
+      }
+    );
 
-    // setTimeout(() => {
-    //   setSelectedRowKeys([]);
-    //   setLoading(false);
-    // }, 1000);
+    setTimeout(() => {
+      setSelectedRowKeys([]);
+      setLoading(false);
+    }, 1000);
   };
 
   const startReject = () => {
     setLoading(true);
-    // ModeratorService.rejectWaitingAccount(selectedRowKeys).then(
-    //   (response) => {
-    //     console.log(response);
-    //     getDataFunction();
-    //   },
-    //   (error) => {
-    //     const _content =
-    //       (error.response &&
-    //         error.response.data &&
-    //         error.response.data.message) ||
-    //       error.message ||
-    //       error.toString();
+    moderaterService.notAcceptAccount(selectedRowKeys).then(
+      (response) => {
+        console.log(response);
+        setCallBack(state.userAPI.callback[0]);
+      },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
 
-    //     console.log(_content);
-    //   }
-    // );
+        console.log(_content);
+      }
+    );
 
-    // setTimeout(() => {
-    //   setSelectedRowKeys([]);
-    //   setLoading(false);
-    // }, 1000);
+    setTimeout(() => {
+      setSelectedRowKeys([]);
+      setLoading(false);
+    }, 1000);
   };
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -251,7 +232,7 @@ const AccountChecking = () => {
       >
         <Button
           type="primary"
-          // onClick={start}
+          onClick={start}
           disabled={!hasSelected}
           loading={loading}
         >
@@ -259,7 +240,7 @@ const AccountChecking = () => {
         </Button>
         <Button
           type="primary"
-          // onClick={startReject}
+          onClick={startReject}
           disabled={!hasSelected}
           danger
         >

@@ -1,6 +1,6 @@
 import axios from "axios";
 import authHeader from "./auth-header";
-const API_URL = "http://localhost:8081/api/auth/";
+const API_URL = "http://localhost:8080/api/auth/";
 
 const register = (
   role_id,
@@ -37,6 +37,7 @@ const login = (user_name, password) => {
       password,
     })
     .then((response) => {
+      console.log(response);
       if (response.data.accessToken) {
         localStorage.setItem("user", JSON.stringify(response.data));
       }
