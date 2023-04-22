@@ -5,7 +5,7 @@ const User = require("../models/user.model.js");
 
 exports.ModeratorAccount = async (req, res) => {
   try {
-    const users = await User.getAllByValid(0);
+    const users = await User.getAllStaffAccountsByValid(0);
     res.status(200).send(users);
   } catch (err) {
     if (err.kind === "not_found") {
