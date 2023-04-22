@@ -29,9 +29,27 @@ User.create = newUser => {
   });
 };
 
-User.getAllByValid = valid => {
+User.getAllModeratorAccounts = () => {
   return new Promise((resolve, reject) => {
-    sql.query(`SELECT * FROM user WHERE valid=${valid} and role_id = 1`, (err, res) => {
+    sql.query(`SELECT * FROM user WHERE role_id = 1`, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        return reject(err);
+      }
+
+      if (res.length) {
+        console.log("found users: ", res);
+        return resolve(res);
+      }
+      
+      reject({ kind: "not_found" });
+    });
+  });
+};
+
+User.getAllStaffAccountsByValid = valid => {
+  return new Promise((resolve, reject) => {
+    sql.query(`SELECT * FROM user WHERE valid = ${valid} and role_id = 2`, (err, res) => {
       if (err) {
         console.log("error: ", err);
         return reject(err);
