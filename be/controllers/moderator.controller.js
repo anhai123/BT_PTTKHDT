@@ -149,6 +149,7 @@ exports.ModeratorUpdateFilm = async (req, res) => {
 exports.ModeratorDeleteFilm = async (req, res) => {
   for (let id of req.body.ids) {
     try {
+      await Screening.removeByMovieId(id);
       await Movies.remove(id);
     } catch (err) {
       if (err.kind === "not_found") {
