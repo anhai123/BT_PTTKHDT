@@ -31,6 +31,8 @@ Screening.findByScreeningId = screening_id => {
       }
 
       if (res.length) {
+        res[0].start_time = moment(res[0].start_time).format("YYYY-MM-DD hh:mm:ss");
+        res[0].end_time = moment(res[0].end_time).format("YYYY-MM-DD hh:mm:ss");
         console.log("found screening: ", res[0]);
         return resolve(res[0]);
       }
@@ -49,6 +51,10 @@ Screening.findByMovieId = movie_id => {
       }
 
       if (res.length) {
+        for (let i = 0; i < res.length; i++) {
+          res[i].start_time = moment(res[i].start_time).format("YYYY-MM-DD hh:mm:ss");
+          res[i].end_time = moment(res[i].end_time).format("YYYY-MM-DD hh:mm:ss");
+        }
         console.log("found screenings: ", res);
         return resolve(res);
       }
