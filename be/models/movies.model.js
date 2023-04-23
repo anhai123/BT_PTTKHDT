@@ -15,6 +15,7 @@ const Movies = function (movies) {
 
 Movies.create = newMovies => {
   return new Promise((resolve, reject) => {
+    newMovies.release_date = moment(newMovies.release_date).format("YYYY-MM-DD");
     sql.query("INSERT INTO movies SET ?", newMovies, (err, res) => {
       if (err) {
         console.log("error: ", err);

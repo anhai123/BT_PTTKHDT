@@ -18,6 +18,7 @@ const User = function (user) {
 
 User.create = newUser => {
   return new Promise((resolve, reject) => {
+    newUser.brithday = moment(newUser.brithday).format("YYYY-MM-DD");
     sql.query("INSERT INTO user SET ?", newUser, (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -115,6 +116,7 @@ User.findById = id => {
 
 User.updateById = user => {
   return new Promise((resolve, reject) => {
+    user.brithday = moment(user.brithday).format("YYYY-MM-DD");
     sql.query(
       "UPDATE user SET ? WHERE user_id = ?",
       [user, user.user_id],

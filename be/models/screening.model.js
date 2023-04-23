@@ -11,6 +11,8 @@ const Screening = function (screening) {
 
 Screening.create = newScreening => {
   return new Promise((resolve, reject) => {
+    newScreening.start_time = moment(newScreening.start_time).format("YYYY-MM-DD hh:mm:ss");
+    newScreening.end_time = moment(newScreening.end_time).format("YYYY-MM-DD hh:mm:ss");
     sql.query("INSERT INTO screening SET ?", newScreening, (err, res) => {
       if (err) {
         console.log("error: ", err);
