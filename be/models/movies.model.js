@@ -92,6 +92,7 @@ Movies.findByType = type => {
 
 Movies.updateById = movie => {
   return new Promise((resolve, reject) => {
+    movie.release_date = moment(movie.release_date).format("YYYY-MM-DD");
     sql.query(
       "UPDATE movies SET ? WHERE movie_id = ?",
       [movie, movie.movie_id],
