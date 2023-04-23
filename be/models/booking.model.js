@@ -13,6 +13,7 @@ const Booking = function (booking) {
 
 Booking.create = newBooking => {
   return new Promise((resolve, reject) => {
+    newBooking.booking_date = moment(newBooking.booking_date).format("YYYY-MM-DD hh:mm:ss");
     sql.query("INSERT INTO booking SET ?", newBooking, (err, res) => {
       if (err) {
         console.log("error: ", err);

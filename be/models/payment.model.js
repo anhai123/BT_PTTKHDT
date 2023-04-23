@@ -9,6 +9,7 @@ const Payment = function (payment) {
 
 Payment.create = newPayment => {
   return new Promise((resolve, reject) => {
+    newPayment.payment_date = moment(newPayment.payment_date).format("YYYY-MM-DD hh:mm:ss");
     sql.query("INSERT INTO payment SET ?", newPayment, (err, res) => {
       if (err) {
         console.log("error: ", err);
