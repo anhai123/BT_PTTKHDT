@@ -58,4 +58,22 @@ Screening.findByMovieId = movie_id => {
   });
 };
 
+Screening.removeByMovieId = movie_id => {
+  return new Promise((resolve, reject) => {
+    sql.query("DELETE FROM screening WHERE movie_id = ?", movie_id, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        return reject(err);
+      }
+
+      if (res.affectedRows == 0) {
+        return reject({ kind: "not_found" });
+      }
+
+      console.log("deleted screenings with movie_id: ", movie_id);
+      resolve(res);
+    });
+  });
+};
+
 module.exports = Screening;
