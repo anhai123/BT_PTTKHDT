@@ -69,4 +69,10 @@ module.exports = function (app) {
     [authJwt.verifyToken, authJwt.isModerator],
     controller.ModeratorCreateScreening
   );
+
+  app.get(
+    "/api/film",
+    [authJwt.verifyToken],
+    controller.GetAllFilm
+  );
 };
