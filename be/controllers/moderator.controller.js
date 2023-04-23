@@ -205,3 +205,22 @@ exports.ModeratorCreateScreening = async (req, res) => {
     });
   }
 };
+
+exports.GetAllFilm = async (req, res) => {
+  try {
+    const movies = await Movies.getAll();
+    res.status(200).send(movies);
+  } catch (err) {
+    if (err.kind === "not_found") {
+      res.status(404).send({
+        message: `Không tìm thấy phim!`,
+      });
+      return;
+    } else {
+      res.status(500).send({
+        message: `Lỗi khi tìm phim`,
+      });
+      return;
+    }
+  }
+};
