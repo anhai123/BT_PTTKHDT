@@ -150,6 +150,15 @@ exports.ModeratorDeleteFilm = async (req, res) => {
   for (let id of req.body.ids) {
     try {
       await Screening.removeByMovieId(id);
+    } catch (err) {
+      if (err.kind !== "not_found") {
+        res.status(500).send({
+          message: "Could not delete with movie_id " + id,
+        });
+        return;
+      }
+    }
+    try {
       await Movies.remove(id);
     } catch (err) {
       if (err.kind === "not_found") {
