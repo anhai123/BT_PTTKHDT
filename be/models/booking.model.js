@@ -33,6 +33,7 @@ Booking.findById = id => {
       }
 
       if (res.length) {
+        res[0].booking_date = moment(res[0].booking_date).format("YYYY-MM-DD hh:mm:ss");
         resolve(res[0]);
         return;
       }
@@ -52,6 +53,9 @@ Booking.findByUserId = user_id => {
       }
 
       if (res.length) {
+        for(let i = 0; i < res.length; i++) {
+          res[i].booking_date = moment(res[i].booking_date).format("YYYY-MM-DD hh:mm:ss");
+        }
         resolve(res);
         return;
       }

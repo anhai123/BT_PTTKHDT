@@ -38,10 +38,13 @@ User.getAllModeratorAccounts = () => {
       }
 
       if (res.length) {
+        for (let i = 0; i < res.length; i++) {
+          res[i].brithday = moment(res[i].brithday).format("YYYY-MM-DD");
+        }
         console.log("found users: ", res);
         return resolve(res);
       }
-      
+
       reject({ kind: "not_found" });
     });
   });
@@ -56,6 +59,9 @@ User.getAllStaffAccountsByValid = valid => {
       }
 
       if (res.length) {
+        for (let i = 0; i < res.length; i++) {
+          res[i].brithday = moment(res[i].brithday).format("YYYY-MM-DD");
+        }
         console.log("found users: ", res);
         return resolve(res);
       }
@@ -75,6 +81,7 @@ User.findByUserName = user_name => {
       }
 
       if (res.length) {
+        res[0].brithday = moment(res[0].brithday).format("YYYY-MM-DD");
         console.log("found user: ", res[0]);
         return resolve(res[0]);
       }
@@ -94,6 +101,7 @@ User.findById = id => {
       }
 
       if (res.length) {
+        res[0].brithday = moment(res[0].brithday).format("YYYY-MM-DD");
         resolve(res[0]);
         return;
       }
@@ -155,6 +163,9 @@ User.findByNameAndRoleId = (full_name, role_id) => {
       }
 
       if (res.length) {
+        for (let i = 0; i < res.length; i++) {
+          res[i].brithday = moment(res[i].brithday).format("YYYY-MM-DD");
+        }
         console.log("found users: ", res);
         return resolve(res);
       }

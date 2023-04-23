@@ -1,4 +1,5 @@
 const sql = require(".").connection;
+const moment = require("moment");
 
 // constructor
 const Movies = function (movies) {
@@ -35,6 +36,9 @@ Movies.getAll = () => {
       }
 
       if (res.length) {
+        for (let i = 0; i < res.length; i++) {
+          res[i].release_date = moment(res[i].release_date).format("YYYY-MM-DD");
+        }
         console.log("found movies: ", res);
         return resolve(res);
       }
@@ -53,6 +57,9 @@ Movies.findByTitle = title => {
       }
 
       if (res.length) {
+        for (let i = 0; i < res.length; i++) {
+          res[i].release_date = moment(res[i].release_date).format("YYYY-MM-DD");
+        }
         console.log("found movies: ", res);
         return resolve(res);
       }
@@ -71,6 +78,9 @@ Movies.findByType = type => {
       }
 
       if (res.length) {
+        for (let i = 0; i < res.length; i++) {
+          res[i].release_date = moment(res[i].release_date).format("YYYY-MM-DD");
+        }
         console.log("found movies: ", res);
         return resolve(res);
       }
@@ -112,6 +122,7 @@ Movies.findById = id => {
       }
 
       if (res.length) {
+        res[0].release_date = moment(res[0].release_date).format("YYYY-MM-DD");
         resolve(res[0]);
         return;
       }
