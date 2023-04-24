@@ -108,8 +108,8 @@ Movies.updateById = movie => {
           return reject({ kind: "not_found" });
         }
 
-        console.log("updated movie: ", { id: movie.id, ...movie });
-        resolve({ id: movie.id, ...movie });
+        console.log("updated movie: ", { id: movie.movie_id, ...movie });
+        resolve({ id: movie.movie_id, ...movie });
       }
     );
   });

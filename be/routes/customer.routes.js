@@ -41,6 +41,12 @@ module.exports = function (app) {
   );
 
   app.get(
+    "/api/customer/screening",
+    [authJwt.verifyToken, authJwt.isCustomer],
+    controller.CustomerGetAllScreening
+  );
+
+  app.get(
     "/api/customer/seat/:screeningId",
     [authJwt.verifyToken, authJwt.isCustomer],
     controller.CustomerGetSeatByScreeningId

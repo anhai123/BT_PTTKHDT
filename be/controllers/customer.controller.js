@@ -106,6 +106,41 @@ exports.CustomerGetScreeningByMovieId = async (req, res) => {
   }
 };
 
+exports.CustomerGetAllScreening = async (req, res) => {
+  try {
+    const movies = await Movies.getAll();
+    for (let i = 0; i < movies.length; i++) {
+      try {
+        const screenings = await Screening.findByMovieId(movies[i].movie_id);
+        movies[i].screenings = screenings;
+      } catch (err) {
+        if (err.kind === "not_found") {
+          movies[i].screenings = [];
+        } else {
+          res.status(500).send({
+            message: `Lỗi khi tìm khung giờ!`,
+          });
+          return;
+        }
+      }
+
+    }
+    res.status(200).send(movies);
+  } catch (err) {
+    if (err.kind === "not_found") {
+      res.status(404).send({
+        message: `Không tìm thấy phim!`,
+      });
+      return;
+    } else {
+      res.status(500).send({
+        message: `Lỗi khi tìm phim!`,
+      });
+      return;
+    }
+  }
+};
+
 exports.CustomerGetSeatByScreeningId = async (req, res) => {
   try {
     const screening = await Screening.findByScreeningId(req.params.screeningId);
