@@ -75,4 +75,16 @@ module.exports = function (app) {
     [authJwt.verifyToken],
     controller.GetAllFilm
   );
+
+  app.get(
+    "/api/information",
+    [authJwt.verifyToken],
+    controller.GetInformation
+  );
+
+  app.put(
+    "/api/information",
+    [authJwt.verifyToken],
+    controller.UpdateInformation
+  );
 };

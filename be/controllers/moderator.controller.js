@@ -234,3 +234,42 @@ exports.GetAllFilm = async (req, res) => {
     }
   }
 };
+
+exports.GetInformation = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    res.status(200).send(user);
+  } catch (err) {
+    if (err.kind === "not_found") {
+      res.status(404).send({
+        message: `Không tìm thấy tài khoản với id ${req.userId}!`,
+      });
+      return;
+    } else {
+      res.status(500).send({
+        message: `Lỗi khi tìm tài khoản với id ${req.userId}!`,
+      });
+      return;
+    }
+  }
+};
+
+exports.UpdateInformation = async (req, res) => {
+  try {
+    req.body.user_id = req.userId;
+    await User.updateById(req.body);
+    res.status(200).send({
+      message: "Cập nhật thông tin thành công!",
+    });
+  } catch (err) {
+    if (err.kind === "not_found") {
+      res.status(404).send({
+        message: `Not found User with id ${req.userId}.`
+      });
+    } else {
+      res.status(500).send({
+        message: "Lỗi khi cập nhật tài khoản với id " + req.userId
+      });
+    }
+  }
+};
