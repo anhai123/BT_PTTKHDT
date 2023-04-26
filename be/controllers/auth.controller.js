@@ -10,7 +10,7 @@ exports.signup = async (req, res) => {
   // Save User to Database
   try {
     let valid = 0;
-    if (req.body.role_id === 1) {
+    if (req.body.role_id === '1') {
       try {
         await User.getAllModeratorAccounts();
       } catch (err) {
@@ -23,7 +23,7 @@ exports.signup = async (req, res) => {
           return;
         }
       }
-    } else if (req.body.role_id === 3) {
+    } else if (req.body.role_id === '3') {
       valid = 1;
     }
     await User.create(new User({
