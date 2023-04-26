@@ -127,12 +127,11 @@ User.updateById = user => {
         }
 
         if (res.affectedRows == 0) {
-          // not found User with the id
           return reject({ kind: "not_found" });
         }
 
-        console.log("updated user: ", { id: user.id, ...user });
-        resolve({ id: user.id, ...user });
+        console.log("updated user: ", { id: user.user_id, ...user });
+        resolve({ id: user.user_id, ...user });
       }
     );
   });
