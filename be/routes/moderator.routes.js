@@ -29,7 +29,7 @@ module.exports = function (app) {
   );
 
   app.get(
-    "/api/moderator/search-account/:fullName",
+    "/api/moderator/search-account",
     [authJwt.verifyToken, authJwt.isModerator],
     controller.ModeratorSearchAccount
   );

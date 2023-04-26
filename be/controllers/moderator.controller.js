@@ -69,12 +69,12 @@ exports.ModeratorReject = async (req, res) => {
 
 exports.ModeratorSearchAccount = async (req, res) => {
   try {
-    const users = await User.findByNameAndRoleId(req.params.fullName, 2);
+    const users = await User.findByNameAndRoleId(2);
     res.status(200).send(users);
   } catch (err) {
     if (err.kind === "not_found") {
       res.status(404).send({
-        message: `Không tìm thấy tài khoản với tên ${req.params.fullName}!`,
+        message: `Không tìm thấy tài khoản với tên !`,
       });
       return;
     } else {

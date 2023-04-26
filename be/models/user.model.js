@@ -156,9 +156,9 @@ User.remove = id => {
   });
 };
 
-User.findByNameAndRoleId = (full_name, role_id) => {
+User.findByNameAndRoleId = (role_id) => {
   return new Promise((resolve, reject) => {
-    sql.query(`SELECT * FROM user WHERE role_id = ${role_id} and full_name LIKE '%${full_name}%' and valid = 1`, (err, res) => {
+    sql.query(`SELECT * FROM user WHERE role_id = ${role_id} and valid = 1`, (err, res) => {
       if (err) {
         console.log("error: ", err);
         return reject(err);
