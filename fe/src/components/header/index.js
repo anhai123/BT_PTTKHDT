@@ -74,6 +74,10 @@ const HeaderCom = () => {
       key: "manage_account",
       label: <Link to="/accounts">Tài khoản</Link>,
     },
+    {
+      key: "manage_account_checked",
+      label: <Link to="/accounts-checked">Tài khoản hệ thống</Link>,
+    },
   ];
   const employeeRouter = [
     {

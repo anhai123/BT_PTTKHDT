@@ -29,6 +29,7 @@ import AllMovie from "./components/AllMovie";
 import DetailMovie from "./components/DetailMovie";
 import ShowtimeManagement from "./components/Admin/ShowtimeManagement/ShowtimeMangement";
 import BookingTicket from "./components/BookingTicket";
+import AccountChecked from "./components/Admin/AccountChecked/AccountChecked";
 const App = () => {
   const [showModeratorBoard, setShowModeratorBoard] = useState(false);
   const [showAdminBoard, setShowAdminBoard] = useState(false);
@@ -55,6 +56,7 @@ const App = () => {
             <Route path="/mod" element={<BoardModerator />} />
             <Route path="/admin" element={<BoardAdmin />} />
             <Route path="/accounts" element={<AccountChecking />} />
+            <Route path="/accounts-checked" element={<AccountChecked />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route
               path="/update-password"

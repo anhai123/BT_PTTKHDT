@@ -1,8 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { Button, Table, message, Input, Space, Typography } from "antd";
 import { useEffect } from "react";
 import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
+import { GlobalState } from "../../../GlobalState";
+import moderaterService from "../../../services/moderator-service";
 const data = [
   {
     key: "1",
@@ -13,10 +15,14 @@ const data = [
   },
 ];
 const AccountChecked = () => {
+  const state = useContext(GlobalState);
+  const [AcceptAccounts, setAcceptAccounts] = state.userAPI.acceptedAccount;
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [callback, setCallback] = state.userAPI.callback;
   //   const [data, setData] = useState([]);
   const hasSelected = selectedRowKeys.length > 0;
+  console.log(AcceptAccounts);
   const getDataFunction = () => {
     // ModeratorService.getWaitingAccountList().then(
     //   (response) => {
@@ -78,29 +84,31 @@ const AccountChecked = () => {
     // }, 1000);
   };
 
-  const startReject = () => {
+  const startReject = (record) => {
+    const ids = [];
+    ids.push(record.user_id);
     setLoading(true);
-    // ModeratorService.rejectWaitingAccount(selectedRowKeys).then(
-    //   (response) => {
-    //     console.log(response);
-    //     getDataFunction();
-    //   },
-    //   (error) => {
-    //     const _content =
-    //       (error.response &&
-    //         error.response.data &&
-    //         error.response.data.message) ||
-    //       error.message ||
-    //       error.toString();
+    moderaterService.rejectWaitingAccount(ids).then(
+      (response) => {
+        console.log(response);
+        setCallback(!callback);
+      },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
 
-    //     console.log(_content);
-    //   }
-    // );
+        console.log(_content);
+      }
+    );
 
-    // setTimeout(() => {
-    //   setSelectedRowKeys([]);
-    //   setLoading(false);
-    // }, 1000);
+    setTimeout(() => {
+      setSelectedRowKeys([]);
+      setLoading(false);
+    }, 1000);
   };
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -229,8 +237,8 @@ const AccountChecked = () => {
   });
   const columns = [
     {
-      title: "Username",
-      dataIndex: "username",
+      title: "Tên người dùng",
+      dataIndex: "full_name",
       key: "ten_nguoi_dung",
       ...getColumnSearchProps("ten_nguoi_dung"),
     },
@@ -239,15 +247,21 @@ const AccountChecked = () => {
       dataIndex: "email",
     },
     {
-      title: "Address",
-      dataIndex: "address",
+      title: "Số điện thoại",
+      dataIndex: "phone",
     },
     {
       title: "Thao tác",
       dataIndex: "operation",
       render: (_, record) => (
         <Space size="middle">
-          <a>Delete</a>
+          <a
+            onClick={() => {
+              startReject(record);
+            }}
+          >
+            Delete
+          </a>
         </Space>
       ),
     },
@@ -271,7 +285,7 @@ const AccountChecked = () => {
         locale={{ emptyText: "Không có tài khoản nào cần duyệt" }}
         rowSelection={rowSelection}
         columns={columns}
-        dataSource={data}
+        dataSource={AcceptAccounts}
       />
     </div>
   );

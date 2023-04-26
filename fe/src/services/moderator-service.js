@@ -63,7 +63,7 @@ const rejectWaitingAccount = (updateId) => {
 };
 const searchEmployeeAccount = (fullName) => {
   return axios
-    .get(API_URL + "account" + `/${fullName}`, { headers: authHeader() })
+    .get(API_URL + "search-account", { headers: authHeader() })
     .then((response) => {
       return response.data;
     });

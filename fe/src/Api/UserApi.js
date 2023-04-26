@@ -12,6 +12,7 @@ const UserAPI = () => {
   const [history, setHistory] = useState([]);
   const [callback, setCallback] = useState(false);
   const [needAcceptAccounts, setNeedAcceptAccounts] = useState([]);
+  const [AcceptAccounts, setAcceptAccounts] = useState([]);
   useEffect(() => {
     console.log("dong 15 userApi");
     if (user) {
@@ -49,6 +50,19 @@ const UserAPI = () => {
           } else {
             setNeedAcceptAccounts(response);
           }
+
+          const acceptedAccount =
+            await moderaterService.searchEmployeeAccount();
+          console.log(acceptedAccount);
+          const _data = acceptedAccount;
+          var __data = [];
+          for (let i = 0; i < _data.length; i++) {
+            _data[i]["key"] = _data[i].user_id;
+            __data.push(_data[i]);
+          }
+          setAcceptAccounts(__data);
+          // console.log(acceptedAccount);
+          // setAcceptAccounts(acceptedAccount);
         } else {
           const response = await userService.getBookingTicket();
           setHistory(response);
@@ -67,6 +81,7 @@ const UserAPI = () => {
     callback: [callback, setCallback],
     history: [history, setHistory],
     notAcceptAccount: [needAcceptAccounts, setNeedAcceptAccounts],
+    acceptedAccount: [AcceptAccounts, setAcceptAccounts],
   };
 };
 

@@ -24,7 +24,7 @@ const { Option } = Select;
     moderaterService.addNewMovie(values).then(
       (response) => {
         message.success("Tạo phim thành công");
-        
+        setCallback(!callback)
       },
       (error) => {
         const _content =
