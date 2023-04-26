@@ -1,29 +1,35 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState , useContext} from "react";
 import "./ChooseSlot.scss";
 import swal from "sweetalert";
 import Movies from "../../ModalTrailer/Movies";
+import userService from "../../../services/user.service";
+import { Button, Space, message } from "antd";
+import { GlobalState } from "../../../GlobalState";
 export default function ChooseSlot(props) {
-
-
+  // console.log(props.infoDatVe)
+  const state = useContext(GlobalState)
+  const [resetSeat, setResetSeat] = state.filmsAPI.resetSeat;
   let { thongTinPhongVe, danhSachGheDangDat, setDanhSachGheDangDat } = props;
-  
+
   const renderGhe = (daDat, ghe) => {
-    console.log(ghe)
-    if (daDat) {
+    // console.log(daDat)
+    // console.log(ghe)
+    if (daDat === "Đã đặt" ||daDat === "Đang đặt" ) {
       return <i className="fa fa-couch slot__item item--picked"></i>;
     } else {
       let cssGheDangDat = "";
 
       let index = danhSachGheDangDat?.findIndex(
-        (gheDangDat) => gheDangDat.stt === ghe.stt
+        (gheDangDat) => gheDangDat.seat_id === ghe.seat_id
       );
       if (index !== -1) {
         cssGheDangDat = "item--picking";
       }
       let cssGheVip = "";
-      if (ghe.loaiGhe === "Vip") {
+      if (ghe.seat_type === "Ghế vip") {
         cssGheVip = "item--vip";
       }
+
       return (
         <i
           className={`fa fa-couch slot__item ${cssGheVip} ${cssGheDangDat}`}
@@ -35,20 +41,69 @@ export default function ChooseSlot(props) {
     }
   };
   const datGhe = (ghe) => {
-    let index = danhSachGheDangDat.findIndex(
-      (gheDangDat) => gheDangDat.stt === ghe.stt
+    userService.putSelectSeat(ghe.seat_id, ghe.room_id).then(
+      (response) => {
+        // setUserInfo(response);
+        // setIslog(true);
+        // state.userAPI.isLogged.setIsLogged(true);
+
+        message.success("Đặt ghế thành công");
+        // props.setInfoDatVe(response)
+
+        let index = danhSachGheDangDat.findIndex(
+          (gheDangDat) => gheDangDat.seat_id === ghe.seat_id
+        );
+        if (index !== -1) {
+          danhSachGheDangDat.splice(index, 1);
+        } else {
+          danhSachGheDangDat = [...danhSachGheDangDat, ghe];
+        }
+        setDanhSachGheDangDat([...danhSachGheDangDat]);
+        setResetSeat([...danhSachGheDangDat])
+        // console.log(response)
+      },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+        message.error(_content);
+      }
     );
-    if (index !== -1) {
-      danhSachGheDangDat.splice(index, 1);
-    } else {
-      danhSachGheDangDat = [...danhSachGheDangDat, ghe];
-    }
-    setDanhSachGheDangDat([...danhSachGheDangDat]);
   };
+  const datGhe1 = (ghe) => {
+    userService.putSelectSeat(ghe.seat_id, ghe.room_id).then(
+      (response) => {
+        // setUserInfo(response);
+        // setIslog(true);
+        // state.userAPI.isLogged.setIsLogged(true);
+
+        message.success("Đặt ghế thành công");
+        // props.setInfoDatVe(response)
+        console.log(response)
+      },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+        message.error(_content);
+      }
+    );
+  }
   const renderDanhSachGhe = () => {
     let { danhSachGhe } = thongTinPhongVe;
+    
     return danhSachGhe?.map((ghe, index) => {
-      return <Fragment key={index}>{renderGhe(ghe.daDat, ghe)}</Fragment>;
+      return <Fragment key={index}>{renderGhe(ghe.status, ghe)}</Fragment>;
     });
   };
 
@@ -81,13 +136,13 @@ export default function ChooseSlot(props) {
             <div className="theater__img d-flex bg-light">
               <img src={`${Movies[0].imgURL}`} alt="hinhanh" />
               <div className="theater__name">
-                <span className="name">
+                {/* <span className="name">
                   <span className="subname">
                     {thongTinPhongVe.thongTinPhim?.tenRap}
                   </span>
-                </span>
+                </span> */}
                 <p className="showtime">
-                  Giờ chiếu: {thongTinPhongVe.thongTinPhim?.gioChieu}
+                  Giờ chiếu: {props.infoDatVe.screening.start_time}
                 </p>
               </div>
             </div>

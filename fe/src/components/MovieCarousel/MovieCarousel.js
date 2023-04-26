@@ -55,13 +55,19 @@ const settings = {
   prevArrow: <SamplePrevArrow />,
 };
 
-const MovieCarousel = () => {
+const MovieCarousel = (props) => {
   return (
     <>
       <Row justify="center">
         <Col span={16}>
-          <Carousel arrows {...settings}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <Carousel arrows {...settings} style={{ background: "white" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                background: "white",
+              }}
+            >
               <MovieCarouselItem />
               <MovieCarouselItem />
               <MovieCarouselItem />
@@ -69,7 +75,7 @@ const MovieCarousel = () => {
             </div>
 
             <div>
-              <h3 style={contentStyle}>3</h3>
+              <MovieCarouselItem />
             </div>
             <div>
               <h3 style={contentStyle}>4</h3>

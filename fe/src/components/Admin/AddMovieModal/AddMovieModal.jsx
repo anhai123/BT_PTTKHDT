@@ -1,40 +1,43 @@
-import React, { Component } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "./AddMovieModal.css";
 // import { qLyAdminService } from "../../../services/QuanLyAdminService";
 import swal from "sweetalert";
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, Upload } from 'antd';
-import { useState } from 'react';
+import { Button, Col, DatePicker, Drawer, Form, Input, InputNumber, Row, Select, Space, Upload , message} from 'antd';
+
+import moderaterService from "../../../services/moderator-service";
+import { GlobalState } from "../../../GlobalState";
 const { Option } = Select;
  const AddMovieModal = () => {
-//  const  state = {
-//     values: {
-//       maPhim: "",
-//       tenPhim: "",
-//       biDanh: "",
-//       hinhAnh: {},
-//       trailer: "",
-//       moTa: "",
-//       ngayKhoiChieu: "",
-//       danhGia: "",
-//       maNhom: "",
-//     },
-//     errors: {
-//       maPhim: "",
-//       tenPhim: "",
-//       biDanh: "",
-//       hinhAnh: "",
-//       trailer: "",
-//       moTa: "",
-//       ngayKhoiChieu: "",
-//       danhGia: "",
-//       maNhom: "",
-//     },
-//   };
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
+  const statee = useContext(GlobalState);
+  const [callback, setCallback] = statee.filmsAPI.callback;
   const showDrawer = () => {
     setOpen(true);
+  };
+
+  const summitForm = async () => {
+    const values = await form.validateFields().then((val) => {
+      return val
+    });
+    moderaterService.addNewMovie(values).then(
+      (response) => {
+        message.success("Tạo phim thành công");
+        
+      },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+        message.error(_content);
+      }
+    );
   };
   const onClose = () => {
     setOpen(false);
@@ -47,87 +50,6 @@ const { Option } = Select;
     const onOk = (value) => {
       console.log("onOk: ", value);
     };
-
-
-
-  // handleChangeInput = (event) => {
-  //   var { value, name } = event.target;
-  //   //tạo ra object this.state.values mới
-  //   let newValues = {
-  //     ...this.state.values,
-  //     [name]: value,
-  //   };
-  //   let newErrors = {
-  //     ...this.state.errors,
-  //     [name]: value === "" ? "không được bỏ trống!" : "",
-  //   };
-
-  //   if (name === "hinhAnh") {
-  //     newValues[name] = event.target.files[0];
-  //   }
-  //   if (name === "ngayKhoiChieu") {
-  //     var moment = require("moment");
-  //     // console.log(value);
-  //     newValues[name] = moment(value, "yyyy-MM-DD").format("DD/MM/yyyy");
-  //   }
-  //   if (name === "danhGia") {
-  //     let regexNumberic = /^[0-9]*$/;
-  //     if (value <= 10 && value >= 0 && value.match(regexNumberic)) {
-  //       newErrors.danhGia = "";
-  //     } else {
-  //       newErrors.danhGia = "Chỉ được nhập số từ 1 tới 10";
-  //     }
-  //   }
-
-  //   this.setState({ values: newValues, errors: newErrors });
-  // };
-  // handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   let valid = true;
-  //   let { values, errors } = this.state;
-
-  //   for (let key in values) {
-  //     if (values[key] === "") {
-  //       // kiểm tra lỗi
-  //       valid = false;
-  //     }
-  //   }
-  //   for (let key in errors) {
-  //     if (errors[key] !== "") {
-  //       valid = false;
-  //     }
-  //   }
-  //   if (!valid) {
-  //     alert("thông tin không hợp lệ");
-  //     return;
-  //   } else {
-  //     // gọi api hoạc dispatch redux
-  //     var form_data = new FormData();
-  //     for (let key in this.state.values) {
-  //       form_data.append(key, this.state.values[key]);
-  //     }
-  //     qLyAdminService
-  //       .themPhim(form_data)
-  //       .then((res) => {
-  //         swal({
-  //           title: "Thêm phim thành công",
-  //           icon: "success",
-  //           button: "OK",
-  //         });
-  //         setTimeout(() => {
-  //           window.location.reload();
-  //         }, 2000);
-  //       })
-  //       .catch((err) => {
-  //         swal({
-  //           title: err.response.data,
-  //           text: "Điền lại thông tin!",
-  //           icon: "warning",
-  //           button: "OK",
-  //         });
-  //       });
-  //   }
-  // };
   //Cho phần tải hình ảnh lên
   const [state, setState] = useState({
     selectedFile: null,
@@ -190,17 +112,17 @@ const { Option } = Select;
         extra={
           <Space>
             <Button onClick={onClose}>Dừng</Button>
-            <Button onClick={onClose} type="primary">
+            <Button onClick={summitForm} type="primary">
               Tạo mới
             </Button>
           </Space>
         }
       >
-        <Form form={form} layout="vertical" hideRequiredMark>
+        <Form form={form} layout="vertical" >
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="name"
+                name="title"
                 label="Tên film"
                 rules={[
                   {
@@ -214,8 +136,8 @@ const { Option } = Select;
             </Col>
             <Col span={12}>
               <Form.Item
-                name="url"
-                label="Url"
+                name="trailer"
+                label="Link trailer"
                 rules={[
                   {
                     required: true,
@@ -235,10 +157,35 @@ const { Option } = Select;
             </Col>
           </Row>
 
+
+          <Row gutter={16}>           
+            <Col span={24}>
+              <Form.Item
+                name="poster_ulr"
+                label="Link poster"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Đường dẫn đến poster phim',
+                  },
+                ]}
+              >
+                <Input
+                  style={{
+                    width: '100%',
+                  }}
+                  addonBefore="http://"
+                  addonAfter=".com"
+                  placeholder="Đường dẫn đến phim poster"
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+
           <Row gutter={16}>
           <Col span={12}>
               <Form.Item
-                name="type"
+                name="genre"
                 label="Loại phim"
                 rules={[
                   {
@@ -247,15 +194,17 @@ const { Option } = Select;
                   },
                 ]}
               >
-                <Select placeholder="Please choose the type">
-                  <Option value="private">Private</Option>
-                  <Option value="public">Public</Option>
+                <Select placeholder="Chọn loại phim phù hợp">
+                  <Option value="horror">Kinh dị</Option>
+                  <Option value="dramatic">Chính kịch</Option>
+                  <Option value="romantic">Lãng mạn</Option>
+                  <Option value="funny">Hài</Option>
                 </Select>
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                name="dateTime"
+                name="release_date"
                 label="Ngày khởi chiếu"
                 rules={[
                   {
@@ -264,7 +213,38 @@ const { Option } = Select;
                   },
                 ]}
               >
-                <DatePicker showTime onChange={onChange} onOk={onOk} />
+                <DatePicker  onChange={onChange} onOk={onOk} />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+          <Col span={12}>
+              <Form.Item
+                name="poster_ulr"
+                label="Poster"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Chọn ảnh',
+                  },
+                ]}
+              >
+              <Input placeholder="Nhập link" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="duration"
+                label="Thời lượng chiếu"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Nhập thời lượng',
+                  },
+                ]}
+              >
+               <InputNumber placeholder="Nhập thời lượng" />
               </Form.Item>
             </Col>
           </Row>
@@ -282,29 +262,6 @@ const { Option } = Select;
               >
                 <Input.TextArea rows={4} placeholder="Nhập mô tả  film" />
               </Form.Item>
-            </Col>
-          </Row>
-
-          <Row gutter={16}>
-            <Col span={24}>
-            <Form.Item
-          name="hinh_anh"
-          label="Chọn hình ảnh"
-          rules={[
-            {
-              required: true,
-              message: "Hãy tải lên một hình ảnh",
-            },
-          ]}
-        >
-          <Upload
-            {...props}
-            fileList={state.selectedFileList}
-            customRequest={dummyRequest}
-          >
-            <Button icon={<UploadOutlined />}>Nhấn vào đây để tải ảnh</Button>
-          </Upload>
-        </Form.Item>
             </Col>
           </Row>
         </Form>

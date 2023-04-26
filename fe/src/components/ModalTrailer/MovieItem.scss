@@ -1,5 +1,6 @@
 @import "../connect";
 .content-left {
+  width: auto;
   color: #fff;
   height: 320px;
   position: relative;
@@ -17,7 +18,7 @@
   height: 100%;
   z-index: 2;
   position: relative;
-  background: linear-gradient(to right, #0d0d0c 50%, transparent 100%);
+  background: linear-gradient(to right, #020f43 50%, transparent 100%);
   border-radius: 10px;
   background-blend-mode: multiply;
   .left-header-movie {
@@ -27,8 +28,12 @@
     position: relative;
     .movie-name {
       display: flex;
+      width: 300px;
       @include Text($fs-2, $fw-regular);
       text-transform: capitalize;
+      white-space:nowrap;
+      text-overflow: ellipsis;
+      overflow:hidden;
     }
     .group-id {
       display: flex;

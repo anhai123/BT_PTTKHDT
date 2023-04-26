@@ -271,12 +271,12 @@ const ShowtimeManagement = () => {
           {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
         </span>
       </div>
-      <Table
+      {/* <Table
         locale={{ emptyText: "Không có lịch phim nào được thêm" }}
         rowSelection={rowSelection}
         columns={columns}
         dataSource={data}
-      />
+      /> */}
     </div>
   );
 };

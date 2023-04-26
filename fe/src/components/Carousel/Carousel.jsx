@@ -10,7 +10,7 @@ const contentStyle = {
 };
 const CarouselComponent = () => (
   <div>
-    <Carousel autoplay>
+    <Carousel dots={false} autoplay>
     <div className="item">
       <div className="item__img">
         <img
@@ -18,9 +18,7 @@ const CarouselComponent = () => (
           src="https://s3img.vcdn.vn/123phim/2020/07/yeu-nhau-mua-e-15949150603140.png"
           alt="phim soi"
         />
-        <div className="background__overlay">
-          <i className="fa fa-play carousel__button" />
-        </div>
+    
       </div>
     </div>
     <div className="item">
@@ -30,9 +28,7 @@ const CarouselComponent = () => (
           src="https://s3img.vcdn.vn/123phim/2020/05/vi-anh-deo-tin-15906776637571.png"
           alt="hinh anh phim"
         />
-        <div className="background__overlay">
-          <i className="fa fa-play carousel__button" />
-        </div>
+      
       </div>
     </div>
     <div className="item">
@@ -42,9 +38,7 @@ const CarouselComponent = () => (
           src="https://s3img.vcdn.vn/123phim/2020/07/ban-dao-15954792351353.jpg"
           alt="va phim cua hinh anh"
         />
-        <div className="background__overlay">
-          <i className="fa fa-play carousel__button" />
-        </div>
+
       </div>
     </div>
   

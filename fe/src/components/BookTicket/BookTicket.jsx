@@ -146,67 +146,68 @@ export default function BookTicket() {
   // };
 
   return (
-    <div className="bookMovie">
-      <div className="row">
-        <div id="movie__dropdown" className="select__item col-md-2 col-xs-6">
-          <div className="select__form">
-            <select
-              name="movie"
-              id="slct"
-              defaultValue={"DEFAULT"}
-              // onChange={handleInput}
-            >
-              <option value="DEFAULT">Chọn phim</option>
-              {/* {renderDSPhim()} */}
-            </select>
-          </div>
-        </div>
-        <div id="theater__dropdown" className="select__item col-md-2 col-xs-6">
-          <div className="select__form">
-            <select
-              name="slct"
-              id="slct"
-              // onChange={handleInputCumRap}
-              defaultValue={"DEFAULT"}
-            >
-              <option value="DEFAULT">Chọn rạp</option>
-              {/* {renderCumRap()} */}
-            </select>
-          </div>
-        </div>
-        <div
-          id="chooseday__dropdown"
-          className="select__item col-md-2 col-xs-6"
-        >
-          <div className="select__form">
-            <select
-              name="slct"
-              id="slct"
-              // onChange={handleInputNgayChieu}
-              defaultValue={"DEFAULT"}
-            >
-              <option value="DEFAULT">Chọn ngày</option>
-              {/* {renderNgayChieu()} */}
-            </select>
-          </div>
-        </div>
-        <div id="showtime__dropdown" className="select__item col-md-2 col-xs-6">
-          <div className="select__form">
-            <select
-              name="slct"
-              id="slct"
-              defaultValue={"DEFAULT"}
-              // onChange={handleInputLichChieu}
-            >
-              <option value="DEFAULT">Chọn giờ</option>
-              {/* {renderGioChieu()} */}
-            </select>
-          </div>
-        </div>
-        <div className="col-md-4 col-sm-12 select__item button__form">
-          {renderDatVe()}
-        </div>
-      </div>
-    </div>
+    // <div className="bookMovie">
+    //   <div className="row">
+    //     <div id="movie__dropdown" className="select__item col-md-2 col-xs-6">
+    //       <div className="select__form">
+    //         <select
+    //           name="movie"
+    //           id="slct"
+    //           defaultValue={"DEFAULT"}
+    //           // onChange={handleInput}
+    //         >
+    //           <option value="DEFAULT">Chọn phim</option>
+    //           {/* {renderDSPhim()} */}
+    //         </select>
+    //       </div>
+    //     </div>
+    //     <div id="theater__dropdown" className="select__item col-md-2 col-xs-6">
+    //       <div className="select__form">
+    //         <select
+    //           name="slct"
+    //           id="slct"
+    //           // onChange={handleInputCumRap}
+    //           defaultValue={"DEFAULT"}
+    //         >
+    //           <option value="DEFAULT">Chọn rạp</option>
+    //           {/* {renderCumRap()} */}
+    //         </select>
+    //       </div>
+    //     </div>
+    //     <div
+    //       id="chooseday__dropdown"
+    //       className="select__item col-md-2 col-xs-6"
+    //     >
+    //       <div className="select__form">
+    //         <select
+    //           name="slct"
+    //           id="slct"
+    //           // onChange={handleInputNgayChieu}
+    //           defaultValue={"DEFAULT"}
+    //         >
+    //           <option value="DEFAULT">Chọn ngày</option>
+    //           {/* {renderNgayChieu()} */}
+    //         </select>
+    //       </div>
+    //     </div>
+    //     <div id="showtime__dropdown" className="select__item col-md-2 col-xs-6">
+    //       <div className="select__form">
+    //         <select
+    //           name="slct"
+    //           id="slct"
+    //           defaultValue={"DEFAULT"}
+    //           // onChange={handleInputLichChieu}
+    //         >
+    //           <option value="DEFAULT">Chọn giờ</option>
+    //           {/* {renderGioChieu()} */}
+    //         </select>
+    //       </div>
+    //     </div>
+    //     <div className="col-md-4 col-sm-12 select__item button__form">
+    //       {renderDatVe()}
+    //     </div>
+    //   </div>
+    // </div>
+    <></>
   );
 }

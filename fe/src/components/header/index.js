@@ -24,7 +24,10 @@ const HeaderCom = () => {
   console.log("routePathPattern", routePathPattern);
   const state = useContext(GlobalState);
   const [isLogged, setIsLogged] = state.userAPI.isLogged;
+
   const [isAdmin, setIsAdmin] = state.userAPI.isAdmin;
+  const [isEmployee, setIsEmployee] = state.userAPI.isEmployee;
+  const [isCustomer, setIsCustomer] = state.userAPI.isCustomer;
   const [categories] = state.categoriesAPI.categories;
 
   const handleCategory = (value) => {};
@@ -41,25 +44,52 @@ const HeaderCom = () => {
   const adminRouter = [
     {
       key: "manage_film",
-      label: <Link to="/manage-film">Phim</Link>,
+      label: (
+        <Link
+          style={{
+            color: "white",
+          }}
+          to=""
+        >
+          Quản lý phim
+        </Link>
+      ),
+      children: [
+        {
+          label: <Link to="/add-film">Thêm phim</Link>,
+          key: "add_new_film",
+        },
+        {
+          key: "manage_show_time",
+          label: <Link to="/show-time">Lịch chiếu</Link>,
+        },
+        {
+          key: "manage_film",
+          label: <Link to="/admin-search-movie">Kho phim</Link>,
+        },
+      ],
     },
-    {
-      key: "manage_show_time",
-      label: <Link to="/show-time">Lịch chiếu</Link>,
-    },
+
     {
       key: "manage_account",
       label: <Link to="/accounts">Tài khoản</Link>,
     },
-
+  ];
+  const employeeRouter = [
     {
-      key: "manage_history",
-      label: <Link to="/ticket-history">Lịch sử vé</Link>,
+      key: "manage_ticket_employee",
+      label: <Link to="/ticket-employee">Lọc vé</Link>,
     },
+  ];
+  const commonRouter = [
     {
       key: "manage_profile",
       label: <Link to="/user-infor">Profile</Link>,
     },
+    {
+      key: "search_film",
+      label: <Link to="/search-film-by-name">Tìm kiếm phim</Link>,
+    },
     isLogged && {
       key: "logout",
       label: (
@@ -69,36 +99,7 @@ const HeaderCom = () => {
       ),
     },
   ];
-
-  const loggedRouter = [
-    isLogged && {
-      key: "logout",
-      label: (
-        <Link to="/" onClick={logoutUser}>
-          Logout
-        </Link>
-      ),
-    },
-    // {
-    //   key: "cart",
-    //   label: (
-    //     <Badge count={cart.length} size="small">
-    //       <Link to="/cart">
-    //         <ShoppingCartOutlined
-    //           style={{ fontSize: "24px", color: "white" }}
-    //           size="medium"
-    //         />
-    //       </Link>
-    //     </Badge>
-    //   ),
-    // },
-  ];
-
   let ItemsNavbar = [
-    // {
-    //   key: "shop",
-    //   label: <Link to="/">{isAdmin ? "Products" : "Shop"}</Link>,
-    // },
     !isLogged && {
       key: "login",
       label: <Link to="/login">Login</Link>,
@@ -107,11 +108,23 @@ const HeaderCom = () => {
       key: "regis",
       label: <Link to="/register">Register</Link>,
     },
-
-    ...loggedRouter,
   ];
+
   if (isAdmin) {
-    ItemsNavbar = [...adminRouter];
+    ItemsNavbar = [...adminRouter, ...commonRouter];
+  }
+  if (isEmployee) {
+    ItemsNavbar = [...employeeRouter, ...commonRouter];
+  }
+  if (isCustomer) {
+    ItemsNavbar = [
+      ,
+      // {
+      //   key: "manage_history",
+      //   label: <Link to="/ticket-history">Lịch sử vé</Link>,
+      // },
+      ...commonRouter,
+    ];
   }
   let ItemsCategory = [];
   let getAllProduct = {
@@ -156,7 +169,7 @@ const HeaderCom = () => {
               }}
               italic
             >
-              <Link to="/">{isAdmin ? "Admin" : "Galaxy Cinema"}</Link>
+              <Link to="/home">{isAdmin ? "Admin" : "Galaxy Cinema"}</Link>
             </Text>
             {/* <Input.Search
               style={{
@@ -176,7 +189,7 @@ const HeaderCom = () => {
               defaultSelectedKeys={["2"]}
               items={ItemsNavbar}
               style={{
-                width: "50%",
+                width: "70%",
                 display: "flex",
                 fontSize: "1.2rem",
                 color: "white",

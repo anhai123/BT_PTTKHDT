@@ -5,10 +5,10 @@ import MovieEntry from "./MovieEntry";
 import Movies from "./Movies";
 import ModalView from "./ModalView";
 
-function MoviesSection() {
+function MoviesSection(props) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentVideoID, setCurrentVideoID] = useState("");
-
+  console.log(props.filmRender);
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -22,32 +22,38 @@ function MoviesSection() {
   };
 
   return (
-    <div id="video-game" className="block bgGray">
+    <div id="video-game" className="block bgGray" style={{ width: "50%" }}>
       <div className="container-fluid">
-        <Row gutter={36}>
-          {Movies.map((Movies, i) => (
-            <Col span={12}>
+        {props.filmRender.map((Movies, i) => {
+          return (
+            <Col span={24}>
               <MovieEntry
-                id={i}
-                key={i}
+                movie_id={Movies.movie_id}
+                key={Movies.movie_id}
                 title={Movies.title}
-                imgURL={Movies.imgURL}
-                description={Movies.console}
-                videoID={Movies.videoID}
+                imgURL={Movies.poster_ulr}
+                description={Movies.description}
+                videoID={Movies.trailer}
+                type={Movies.type}
+                duration={Movies.duration}
+                release_date={Movies.release_date}
                 setCurrentVideoID={setCurrentVideoID}
                 showModal={showModal}
+                movie_main={Movies}
+                trailer={Movies.trailer}
               />
+
+              {isModalVisible && (
+                <ModalView
+                  videoID={Movies.trailer}
+                  handleClose={handleClose}
+                  isModalVisible={isModalVisible}
+                  handleCancel={handleCancel}
+                />
+              )}
             </Col>
-          ))}
-          {isModalVisible && (
-            <ModalView
-              videoID={currentVideoID}
-              handleClose={handleClose}
-              isModalVisible={isModalVisible}
-              handleCancel={handleCancel}
-            />
-          )}
-        </Row>
+          );
+        })}
       </div>
     </div>
   );

@@ -1,58 +1,58 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Navigate, useNavigate, Link } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { GlobalState } from "../GlobalState";
-import { login } from "../slices/auth";
-import { clearMessage } from "../slices/message";
-import authService from "../services/auth.service";
+import { GlobalState } from "../../GlobalState";
+
+import authService from "../../services/auth.service";
 import { Button, Checkbox, Input, Row, Col, Card, Space, message } from "antd";
-const Login = () => {
+const Verification = () => {
   let navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [fgpass, setfgpass] = useState(false);
+  const [updatePassword, setupdatePassword] = useState(false);
   const initialValues = {
-    username: "",
-    password: "",
+    user_name: "",
+    verification: "",
   };
   const state = useContext(GlobalState);
   const [isLogged] = state.userAPI.isLogged;
   const [callback, setCallback] = state.userAPI.callback;
   var islog = state.userAPI.isLogged[0];
   const validationSchema = Yup.object().shape({
-    username: Yup.string().required("This field is required!"),
-    password: Yup.string().required("This field is required!"),
+    user_name: Yup.string().required("This field is required!"),
+    verification: Yup.string().required("This field is required!"),
   });
 
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
-    authService.login(values.username, values.password).then(
-      (response) => {
-        // setUserInfo(response);
-        // setIslog(true);
-        // state.userAPI.isLogged.setIsLogged(true);
+    authService
+      .forgotPasswordSendOTP(values.user_name, values.verification)
+      .then(
+        (response) => {
+          // setUserInfo(response);
+          // setIslog(true);
+          // state.userAPI.isLogged.setIsLogged(true);
+          console.log(response);
+          message.success("Xác nhận verification code thành công");
+          localStorage.setItem("verification_code", response.verification_code);
+          setupdatePassword(true);
+        },
+        (error) => {
+          const _content =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
 
-        message.success("login successfully");
-        console.log("dong 35 login");
-        setCallback(!callback);
-        window.location.href = "/home";
-      },
-      (error) => {
-        const _content =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-
-        console.log(_content);
-        message.error(_content);
-      }
-    );
+          console.log(_content);
+          message.error(_content);
+        }
+      );
   };
   console.log(islog);
-  if (fgpass) {
-    return <Navigate to="/forgot-password" />;
+  if (updatePassword) {
+    return <Navigate to="/update-password" />;
   }
 
   return (
@@ -72,20 +72,19 @@ const Login = () => {
         >
           <Form>
             <div className="form-group">
-              <label htmlFor="username">Username</label>
-              <Field name="username" type="text" className="form-control" />
+              <label htmlFor="user_name">Nhập username</label>
+              <Field name="user_name" type="text" className="form-control" />
               <ErrorMessage
-                name="username"
+                name="user_name"
                 component="div"
                 className="alert alert-danger"
               />
             </div>
-
             <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <Field name="password" type="password" className="form-control" />
+              <label htmlFor="verification">Mã verification</label>
+              <Field name="verification" type="text" className="form-control" />
               <ErrorMessage
-                name="password"
+                name="verification"
                 component="div"
                 className="alert alert-danger"
               />
@@ -100,23 +99,21 @@ const Login = () => {
                 {loading && (
                   <span className="spinner-border spinner-border-sm"></span>
                 )}
-                <span>Login</span>
+                <span>Quên mật khẩu</span>
               </button>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  paddingTop: "1rem",
+                }}
+              ></div>
             </div>
           </Form>
         </Formik>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            paddingTop: "1rem",
-          }}
-        >
-          <a href="/forgot-password">Quên mật khẩu</a>
-        </div>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Verification;

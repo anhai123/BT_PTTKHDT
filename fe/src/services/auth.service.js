@@ -111,6 +111,10 @@ const authService = {
   register,
   login,
   logout,
+  changePassword,
+  forgotPassword,
+  forgotPasswordSendOTP,
+  forgotPasswordAndUpdateNewPass,
 };
 
 export default authService;

@@ -1,4 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { GlobalState } from "../../../GlobalState";
+import moderaterService from "../../../services/moderator-service";
+import EditMovieModal from "../EditMovieModal/EditMovieModal";
+import AddMovieModal from "../AddMovieModal/AddMovieModal";
+import moment from "moment";
 import {
   Form,
   Input,
@@ -8,6 +13,8 @@ import {
   Typography,
   Button,
   Space,
+  message,
+  DatePicker,
 } from "antd";
 const originData = [];
 for (let i = 0; i < 6; i++) {
@@ -28,7 +35,19 @@ const EditableCell = ({
   children,
   ...restProps
 }) => {
-  const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
+  const inputNode =
+    inputType === "number" ? (
+      <InputNumber />
+    ) : inputType === "date" ? (
+      <DatePicker
+        format="YYYY-MM-DD"
+        onChange={(date, dateStringg) => {
+          console.log(date + "dasd" + dateStringg);
+        }}
+      />
+    ) : (
+      <Input />
+    );
   return (
     <td {...restProps}>
       {editing ? (
@@ -46,6 +65,12 @@ const EditableCell = ({
         >
           {inputNode}
         </Form.Item>
+      ) : dataIndex === "poster_ulr" ? (
+        <img
+          style={{ height: "100px", width: "100px" }}
+          src={record.poster_ulr}
+          alt="Girl in a jacket"
+        ></img>
       ) : (
         children
       )}
@@ -56,19 +81,56 @@ const MovieManagement = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const state = useContext(GlobalState);
+  const [callback, setCallback] = state.filmsAPI.callback;
+  const [film, setfilm] = state.filmsAPI.film;
+
   const [form] = Form.useForm();
-  const [data, setData] = useState(originData);
+  const [data, setData] = useState([]);
   const [editingKey, setEditingKey] = useState("");
   const isEditing = (record) => record.key === editingKey;
   const hasSelected = selectedRowKeys.length > 0;
+  console.log(film);
 
+  const getDataFunction = () => {
+    const _data = film;
+
+    var __data = [];
+    for (let i = 0; i < _data.length; i++) {
+      _data[i]["key"] = _data[i].movie_id;
+      __data.push(_data[i]);
+    }
+    setData(__data);
+  };
+
+  useEffect(() => {
+    getDataFunction();
+  }, [film]);
   const start = () => {
     setLoading(true);
-    // ajax request after empty completing
+    console.log(selectedRowKeys);
+    moderaterService.deleteFilm(selectedRowKeys).then(
+      (response) => {
+        message.success("Xóa phim thành công");
+        setCallback(!callback);
+      },
+      (error) => {
+        const _content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        console.log(_content);
+        message.error(_content);
+      }
+    );
     setTimeout(() => {
       setSelectedRowKeys([]);
       setLoading(false);
     }, 1000);
+    getDataFunction();
   };
   const onSelectChange = (newSelectedRowKeys) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
@@ -84,7 +146,9 @@ const MovieManagement = () => {
       name: "",
       age: "",
       address: "",
+
       ...record,
+      release_date: moment(record.release_date),
     });
     setEditingKey(record.key);
   };
@@ -106,12 +170,37 @@ const MovieManagement = () => {
       const row = await form.validateFields();
       const newData = [...data];
       const index = newData.findIndex((item) => key === item.key);
+      console.log(row.release_date);
       if (index > -1) {
+        console.log("index >1");
         const item = newData[index];
         newData.splice(index, 1, {
           ...item,
           ...row,
         });
+        console.log(newData);
+        await moderaterService.updateFilmInfor(row).then(
+          (response) => {
+            // setUserInfo(response);
+            // setIslog(true);
+            // state.userAPI.isLogged.setIsLogged(true);
+
+            message.success("Cập nhật film thành công");
+
+            setCallback(!callback);
+          },
+          (error) => {
+            const _content =
+              (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+              error.message ||
+              error.toString();
+
+            console.log(_content);
+            message.error(_content);
+          }
+        );
         setData(newData);
         setEditingKey("");
       } else {
@@ -126,43 +215,58 @@ const MovieManagement = () => {
   const columns = [
     {
       title: "Mã phim",
-      dataIndex: "name",
+      dataIndex: "movie_id",
       width: "5%",
       editable: true,
     },
+
     {
-      title: "Tên phim",
-      dataIndex: "age",
+      title: "Ảnh bìa",
+      dataIndex: "poster_ulr",
       width: "10%",
       editable: true,
     },
     {
-      title: "Hình ảnh",
-      dataIndex: "address",
-      width: "15%",
+      title: "Thời lượng",
+      dataIndex: "duration",
+      width: "10%",
       editable: true,
     },
     {
+      title: "Tên phim",
+      dataIndex: "title",
+      width: "10%",
+      editable: true,
+    },
+
+    {
       title: "Trailer",
-      dataIndex: "link_trailer",
+      dataIndex: "trailer",
       width: "15%",
       editable: true,
     },
     {
       title: "Mô tả",
-      dataIndex: "Description",
-      width: "28%",
+      dataIndex: "description",
+      width: "30%",
       editable: true,
     },
     {
       title: "Ngày khởi chiếu",
-      dataIndex: "date_time",
+      dataIndex: "release_date",
+      width: "18%",
+      editable: true,
+    },
+    {
+      title: "Thể loại",
+      dataIndex: "genre",
       width: "10%",
       editable: true,
     },
     {
       title: "Thao tác",
       dataIndex: "operation",
+      width: "10%",
       render: (_, record) => {
         const editable = isEditing(record);
         return editable ? (
@@ -184,15 +288,10 @@ const MovieManagement = () => {
             <Typography.Link
               disabled={editingKey !== ""}
               onClick={() => edit(record)}
+              type="warning"
             >
-              Edit
+              Sửa phim
             </Typography.Link>
-            <Typography.Text
-              type="danger"
-              // onClick={() => edit(record)}
-            >
-              Delete
-            </Typography.Text>
           </Space>
         );
       },
@@ -206,7 +305,12 @@ const MovieManagement = () => {
       ...col,
       onCell: (record) => ({
         record,
-        inputType: col.dataIndex === "age" ? "number" : "text",
+        inputType:
+          col.dataIndex === "age"
+            ? "number"
+            : col.dataIndex === "release_date"
+            ? "date"
+            : "text",
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
@@ -220,9 +324,10 @@ const MovieManagement = () => {
           marginBottom: 16,
         }}
       >
-        <Button type="primary" onClick={start} disabled={!hasSelected} danger>
+        <Button type="primary" onClick={start} danger>
           Delete
         </Button>
+        <AddMovieModal />
         <span
           style={{
             marginLeft: 8,
@@ -232,21 +337,23 @@ const MovieManagement = () => {
         </span>
       </div>
       <Form form={form} component={false}>
-        <Table
-          components={{
-            body: {
-              cell: EditableCell,
-            },
-          }}
-          bordered
-          dataSource={data}
-          columns={mergedColumns}
-          rowClassName="editable-row"
-          pagination={{
-            onChange: cancel,
-          }}
-          rowSelection={rowSelection}
-        />
+        {data[0] && (
+          <Table
+            components={{
+              body: {
+                cell: EditableCell,
+              },
+            }}
+            bordered
+            dataSource={film}
+            columns={mergedColumns}
+            rowClassName="editable-row"
+            pagination={{
+              onChange: cancel,
+            }}
+            rowSelection={rowSelection}
+          />
+        )}
       </Form>
     </>
   );

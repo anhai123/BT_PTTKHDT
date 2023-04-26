@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import ReactPlayer from "react-player";
 
 function YoutubeSection(props) {
+  console.log(props.videoID);
   return (
     <div className="container-fluid">
       <ReactPlayer
-        url={`https://www.youtube.com/watch?v=${props.videoID}`}
+        url={`${props.videoID}`}
         muted={false}
         playing={true}
         controls={true}

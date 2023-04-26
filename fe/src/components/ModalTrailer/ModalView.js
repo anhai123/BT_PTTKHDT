@@ -9,7 +9,9 @@ const ModalView = ({
   handleClose,
   handleCancel,
   videoID,
+  trailer,
 }) => {
+  console.log(trailer);
   return (
     <Modal
       title={title}

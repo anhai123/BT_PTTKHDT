@@ -1,10 +1,28 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import "../MovieInfo/MovieInfo.scss";
 // import ModalTrailer from "../../ModalTrailer/ModalTrailer";
-
+import ModalView from "../../ModalTrailer/ModalView";
+import filmService from "../../../services/film.service";
+import { GlobalState } from "../../../GlobalState";
 export default function MovieInfo({ phimItem }) {
+  
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [currentVideoID, setCurrentVideoID] = useState("");
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleClose = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+  console.log(phimItem)
   const [open, setOpen] = React.useState(false);
-  const handleToggle = () => setOpen(!open);
+  const handleToggle = () => showModal();
   var moment = require("moment");
   const renderStar = (rating) => {
     if (rating > 5) rating = 5;
@@ -37,10 +55,7 @@ export default function MovieInfo({ phimItem }) {
         <div className="play__mobile">
           <i className="fa fa-play" />
         </div>
-        <div className="rating__point">
-          <p className="film__point">{countRatingMark(4)}</p>
-          <div className="rating__stars">{renderStar(7)}</div>
-        </div>
+      
       </div>
       <div className="form__info container">
         <div className="row">
@@ -51,8 +66,8 @@ export default function MovieInfo({ phimItem }) {
             >
               <img
                 className="w-100 h-100"
-                src="https://m.media-amazon.com/images/M/MV5BMjM2NTQ5Mzc2M15BMl5BanBnXkFtZTgwNTcxMDI2NTE@._V1_FMjpg_UX1000_.jpg"
-                alt={phimItem.hinhAnh}
+                alt="https://m.media-amazon.com/images/M/MV5BMjM2NTQ5Mzc2M15BMl5BanBnXkFtZTgwNTcxMDI2NTE@._V1_FMjpg_UX1000_.jpg"
+                src={phimItem.poster_ulr}
               />
               <div className="play__btn" onClick={handleToggle}>
                 <i className="fa fa-play" />
@@ -60,50 +75,38 @@ export default function MovieInfo({ phimItem }) {
             </div>
           </div>
           <div className="movie__info col-6">
-            <div>
+            
               <div className="showtime">
-                {moment(phimItem.ngayKhoiChieu).format("DD-MM-yy")}
+                {moment(phimItem.release_date).format("DD-MM-yy")}
               </div>
               <div className="mb-3 d-flex justify-content-start align-items-center">
-                <span className="age--C">maNhom</span>
-                <span className="name">tenPhim</span>
+                <span className="age--C">{phimItem.genre}</span>
+                <span className="name">{phimItem.title}</span>
               </div>
 
-              <p className="during">120 phút</p>
-              <a href={"#movieTheater"}>
+              <p className="during">Thời lượng: {phimItem.duration} phút</p>
+              {/* <a href={"#movieTheater"}>
                 <button className="bookTicket-btn">Mua Vé</button>
-              </a>
-            </div>
+              </a> */}
+            
           </div>
           <div className="movie__rating d-flex justify-content-end col-3">
             <div>
-              <div className="rating__point">
-              {countRatingMark(4)}
-                <div className="vongtronxanh"></div>
-              </div>
-              <div className="rating__stars">
-                {renderStar(8)}
-              </div>
-              <div className="rating__text">
-               8 người đánh giá
-              </div>
+            <p style={{color:"white" }}> <h2>Description</h2> <p style={{textAlign:"left"}}>{phimItem.description}</p></p>
             </div>
           </div>
         </div>
       </div>
-      <div className="film__infoMobile">
-        <div className="days">
-          {moment(phimItem.ngayKhoiChieu).format("DD-MM-yy")}
-        </div>
-        <div className="name">yyh</div>
-        <div className="during">120 phút</div>
-      </div>
-      {/* <ModalTrailer
-        trailer={phimItem.trailer}
-        maPhim={phimItem.maPhim}
-        open={open}
-        handleToggle={handleToggle}
-      /> */}
+
+      {isModalVisible && (
+          <ModalView
+            videoID={phimItem.trailer}
+            handleClose={handleClose}
+            isModalVisible={isModalVisible}
+            handleCancel={handleCancel}
+            url={phimItem.trailer}
+          />
+        )}
     </section>
   );
 }

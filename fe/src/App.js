@@ -17,15 +17,27 @@ import { logout } from "./slices/auth";
 import UserInformation from "./components/UserInformation/UserInformation";
 import EventBus from "./common/EventBus";
 import AccountChecking from "./components/Admin/AccountChecking/AccountChecking";
+// import ForgotPassword from "./components/ForgotPassword/forgotPasswordForm";
+import ChangePassWord from "./components/ChangePassword/ChangePassword";
+import ForgotPassword from "./components/ForgotPassword/forgotPasswordForm";
+import Verification from "./components/ForgotPassword/verification";
+import ChangePassWithVerification from "./components/ForgotPassword/changePassWithVerificationCode";
+import AddMovieModal from "./components/Admin/AddMovieModal/AddMovieModal";
+import MovieManagement from "./components/Admin/Movie management/MovieManagement";
+import TicketFiltering from "./components/Employee/TicketFiltering";
+import AllMovie from "./components/AllMovie";
+import DetailMovie from "./components/DetailMovie";
+import ShowtimeManagement from "./components/Admin/ShowtimeManagement/ShowtimeMangement";
+import BookingTicket from "./components/BookingTicket";
 const App = () => {
   const [showModeratorBoard, setShowModeratorBoard] = useState(false);
   const [showAdminBoard, setShowAdminBoard] = useState(false);
 
-  const state = useContext(GlobalState);
-  const [isLogged] = state.userAPI.isLogged;
-  const [isAdmin] = state.userAPI.isAdmin;
-  console.log("isAdmin", isAdmin, "isLogged", isLogged);
-  console.log(state);
+  // const state = useContext(GlobalState);
+  // const [isLogged] = state.userAPI.isLogged;
+  // const [isAdmin] = state.userAPI.isAdmin;
+  // console.log("isAdmin", isAdmin, "isLogged", isLogged);
+  // console.log(state);
 
   return (
     <Router>
@@ -33,7 +45,8 @@ const App = () => {
         <HeaderCom />
         <div>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/verification" element={<Verification />} />
+            <Route path="/" element={<Login />} />
             <Route path="/home" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
@@ -42,6 +55,18 @@ const App = () => {
             <Route path="/mod" element={<BoardModerator />} />
             <Route path="/admin" element={<BoardAdmin />} />
             <Route path="/accounts" element={<AccountChecking />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route
+              path="/update-password"
+              element={<ChangePassWithVerification />}
+            />
+            <Route path="/add-film" element={<AddMovieModal />} />
+            <Route path="/admin-search-movie" element={<MovieManagement />} />
+            <Route path="/ticket-employee" element={<TicketFiltering />} />
+            <Route path="/search-film-by-name" element={<AllMovie />} />
+            <Route path="/detail-select-movie" element={<DetailMovie />} />
+            <Route path="/show-time" element={<ShowtimeManagement />} />
+            <Route path="/buy-ticket" element={<BookingTicket />} />
           </Routes>
         </div>
       </div>

@@ -1,21 +1,20 @@
 import { Card } from "antd";
 const { Meta } = Card;
-const MovieCarouselItem = () => (
+const MovieCarouselItem = (props) => (
   <Card
     hoverable
     style={{
-      width: "21%",
-      display: "inline-block",
-      margin: "2%",
+      width: "100%",
     }}
     cover={
       <img
+        style={{ height: "70%" }}
         alt="example"
-        src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
+        src={props.film.poster_ulr}
       />
     }
   >
-    <Meta title="Europe Street beat" description="www.instagram.com" />
+    <Meta title={props.film.title} description={props.film.genre} />
   </Card>
 );
 export default MovieCarouselItem;

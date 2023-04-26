@@ -10,7 +10,7 @@
   }
   .checkout__form {
     overflow-y: scroll;
-    height: 450px;
+    height: 300px;
     @include responsive_mobile {
       overflow-y: visible;
       height: auto;

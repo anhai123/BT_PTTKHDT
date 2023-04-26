@@ -5,15 +5,15 @@ import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
 import moderaterService from "../../../services/moderator-service";
 
-const data = [
-  {
-    key: "1",
-    username: "John Brown",
-    email: 32,
-    address: "New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
-  },
-];
+// const data = [
+//   {
+//     key: "1",
+//     username: "John Brown",
+//     email: 32,
+//     address: "New York No. 1 Lake Park",
+//     tags: ["nice", "developer"],
+//   },
+// ];
 const AccountChecking = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -21,12 +21,30 @@ const AccountChecking = () => {
   const hasSelected = selectedRowKeys.length > 0;
   const state = useContext(GlobalState);
   const notAcceptAccount = state.userAPI.notAcceptAccount[0];
-  const setCallBack = state.userAPI.callback[1];
+  const [callback, setCallback] = state.userAPI.callback;
+  const [data, setData] = useState([]);
   console.log(notAcceptAccount);
+  const getDataFunction = () => {
+    const _data = [];
+    for (let i = 0; i < notAcceptAccount.length; i++) {
+      _data.push({
+        key: notAcceptAccount[i].user_id,
+        username: notAcceptAccount[i].user_name,
+        email: notAcceptAccount[i].email,
+        address: notAcceptAccount[i].address,
+        birthday: notAcceptAccount[i].brithday,
+        phone: notAcceptAccount[i].phone,
+        full_name: notAcceptAccount[i].full_name,
+        role_id: notAcceptAccount[i].role_id,
+      });
+    }
+    setData(_data);
+  };
 
-  //   useEffect(() => {
-  //     getDataFunction();
-  //   }, [loading]);
+  useEffect(() => {
+    getDataFunction();
+  }, [notAcceptAccount]);
+
   const start = () => {
     setLoading(true);
     moderaterService.acceptAccount(selectedRowKeys).then(
@@ -39,7 +57,7 @@ const AccountChecking = () => {
             duration: 2,
           });
         }, 1000);
-        setCallBack(state.userAPI.callback[0]);
+        setCallback(!callback);
       },
       (error) => {
         const _content =
@@ -61,10 +79,10 @@ const AccountChecking = () => {
 
   const startReject = () => {
     setLoading(true);
-    moderaterService.notAcceptAccount(selectedRowKeys).then(
+    moderaterService.rejectWaitingAccount(selectedRowKeys).then(
       (response) => {
         console.log(response);
-        setCallBack(state.userAPI.callback[0]);
+        setCallback(!callback);
       },
       (error) => {
         const _content =
@@ -211,16 +229,28 @@ const AccountChecking = () => {
     {
       title: "Username",
       dataIndex: "username",
-      key: "ten_nguoi_dung",
-      ...getColumnSearchProps("ten_nguoi_dung"),
+      key: "username",
+      ...getColumnSearchProps("username"),
     },
     {
       title: "Email",
       dataIndex: "email",
     },
     {
-      title: "Address",
+      title: "Địa chỉ",
       dataIndex: "address",
+    },
+    {
+      title: "Số điện thoại",
+      dataIndex: "phone",
+    },
+    {
+      title: "Vai trò",
+      dataIndex: "role_id",
+    },
+    {
+      title: "Tên thật",
+      dataIndex: "full_name",
     },
   ];
   return (
