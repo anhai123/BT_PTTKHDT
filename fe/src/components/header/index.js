@@ -95,12 +95,22 @@ const HeaderCom = () => {
       label: <Link to="/search-film-by-name">Tìm kiếm phim</Link>,
     },
     isLogged && {
-      key: "logout",
-      label: (
-        <Link to="/" onClick={logoutUser}>
-          Logout
-        </Link>
-      ),
+      key: "personal",
+      label: <Link to="#">Thao tác</Link>,
+      children: [
+        {
+          key: "logout",
+          label: (
+            <Link to="/" onClick={logoutUser}>
+              Logout
+            </Link>
+          ),
+        },
+        {
+          key: "change_pass",
+          label: <Link to="/change-password">Đổi mật khẩu</Link>,
+        },
+      ],
     },
   ];
   let ItemsNavbar = [
